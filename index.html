@@ -120,10 +120,23 @@
         /* Admin inspect panel */
         .inspect-panel { background: rgba(6,199,85,0.05); border: 1px solid rgba(6,199,85,0.2); border-radius: 1.5rem; padding: 1.5rem; margin-bottom: 1rem; }
         /* Fix time input appearance */
-        input[type="time"]::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.4; cursor: pointer; }
-        input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.4; cursor: pointer; }
+        input[type="time"]::-webkit-calendar-picker-indicator { 
+            filter: invert(1); opacity: 0.6; cursor: pointer; width: 16px; height: 16px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2380ffaa' stroke-width='2'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolyline points='12 6 12 12 16 14'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-size: contain;
+        }
+        input[type="date"]::-webkit-calendar-picker-indicator { 
+            filter: invert(1); opacity: 0.6; cursor: pointer; width: 16px; height: 16px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2380ffaa' stroke-width='2'%3E%3Crect x='3' y='4' width='18' height='18' rx='2'/%3E%3Cpath d='M16 2v4M8 2v4M3 10h18'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-size: contain;
+        }
         input[type="time"] { color-scheme: dark; }
         input[type="date"] { color-scheme: dark; }
+        /* Advance history table */
+        .adv-table tr:hover { background: rgba(255,255,255,0.03); }
+        /* Sub history badge */
+        .sub-active { color: #80ffaa; background: rgba(128,255,170,0.1); border: 1px solid rgba(128,255,170,0.3); border-radius: 999px; padding: 2px 8px; font-size: 9px; font-weight: 900; }
+        .sub-expired { color: #ff3131; background: rgba(255,49,49,0.1); border: 1px solid rgba(255,49,49,0.3); border-radius: 999px; padding: 2px 8px; font-size: 9px; font-weight: 900; }
     </style>
 </head>
 <body class="min-h-screen">
@@ -160,10 +173,10 @@
                 </div>
             </div>
 
-            <!-- REGISTER SECTION - ✅ UPDATE 3: Language Picker for PC added here -->
+            <!-- REGISTER SECTION -->
             <div id="register-section" class="space-y-6 text-left">
-                <h1 class="text-3xl font-black tracking-tighter text-center uppercase">Join Us</h1>
-                <p class="text-center text-zinc-500 text-sm font-medium">Create a new account with your email.</p>
+                <h1 id="reg-title" class="text-3xl font-black tracking-tighter text-center uppercase">Join Us</h1>
+                <p id="reg-subtitle" class="text-center text-zinc-500 text-sm font-medium">Create a new account with your email.</p>
                 
                 <!-- Language Picker PC Fix -->
                 <div>
@@ -180,9 +193,9 @@
                     <input type="email" id="reg-email" class="auth-input" placeholder="you@example.com">
                     <input type="password" id="reg-password" class="auth-input" placeholder="Min. 6 characters">
                 </div>
-                <button onclick="handleAuth('signup')" class="btn-neon text-lg uppercase">Register Account</button>
+                <button onclick="handleAuth('signup')" id="reg-btn" class="btn-neon text-lg uppercase">Register Account</button>
                 <div class="text-center pt-2 border-t border-zinc-900 mt-4">
-                    <button onclick="toggleAuthView('login')" class="text-[#22c55e] font-bold hover:underline">Already have an account? Sign In</button>
+                    <button onclick="toggleAuthView('login')" id="reg-back" class="text-[#22c55e] font-bold hover:underline">Already have an account? Sign In</button>
                 </div>
             </div>
 
@@ -200,6 +213,7 @@
     <div id="admin-panel" class="max-w-6xl mx-auto p-6 mt-4">
         <div class="card-ui p-8 bg-zinc-900/40 border-emerald-500/30">
             <h2 class="text-emerald-500 font-black uppercase text-sm mb-6">👑 Admin Control Panel</h2>
+            <!-- Approve -->
             <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mb-4">
                 <input type="email" id="target-email" class="md:col-span-6 bg-black border border-zinc-800 p-4 rounded-2xl text-sm" placeholder="User Email">
                 <select id="sub-days" class="md:col-span-3 bg-black border border-zinc-800 p-4 rounded-2xl text-sm">
@@ -209,8 +223,8 @@
                 </select>
                 <button onclick="approveUser()" class="md:col-span-3 bg-emerald-500 text-black p-4 rounded-2xl font-black text-xs uppercase">Approve Access</button>
             </div>
-            <!-- ✅ UPDATE 2: Admin Inspect Mode -->
-            <div class="border-t border-zinc-800 pt-4">
+            <!-- Inspect Mode -->
+            <div class="border-t border-zinc-800 pt-4 mb-4">
                 <h3 class="text-zinc-400 font-black uppercase text-xs mb-3">🔍 Inspect User Data</h3>
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
                     <input type="email" id="inspect-email" class="md:col-span-8 bg-black border border-zinc-800 p-4 rounded-2xl text-sm" placeholder="User Email to Inspect...">
@@ -218,6 +232,29 @@
                     <button onclick="adminExitInspect()" id="exitInspectBtn" class="md:col-span-2 bg-red-600 hover:bg-red-500 text-white p-4 rounded-2xl font-black text-xs uppercase transition hidden">✕ Exit</button>
                 </div>
                 <div id="inspect-status" class="mt-2 text-xs text-zinc-500 font-bold"></div>
+            </div>
+            <!-- Subscription History -->
+            <div class="border-t border-zinc-800 pt-4">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-zinc-400 font-black uppercase text-xs">📋 Subscription History</h3>
+                    <button onclick="loadSubHistory()" class="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-xl text-[9px] font-black uppercase transition">↻ Refresh</button>
+                </div>
+                <div class="rounded-2xl overflow-hidden border border-zinc-800">
+                    <table class="w-full text-left" style="font-size:11px;">
+                        <thead class="bg-zinc-900">
+                            <tr>
+                                <th class="px-4 py-3 text-zinc-500 font-black uppercase text-[9px]">Email</th>
+                                <th class="px-4 py-3 text-zinc-500 font-black uppercase text-[9px]">Status</th>
+                                <th class="px-4 py-3 text-zinc-500 font-black uppercase text-[9px]">Expiry Date</th>
+                                <th class="px-4 py-3 text-zinc-500 font-black uppercase text-[9px]">Days Left</th>
+                                <th class="px-4 py-3 text-zinc-500 font-black uppercase text-[9px] text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subHistoryBody" class="divide-y divide-zinc-800">
+                            <tr><td colspan="5" class="px-4 py-6 text-center text-zinc-600 text-xs font-bold">Click Refresh to load subscribers</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -422,11 +459,29 @@
                                 <div><p id="lblNetTotal" class="text-xs font-black text-emerald-500 uppercase mb-1"></p><span id="valNet" class="text-4xl font-black text-emerald-500 tracking-tighter">0</span></div>
                                 <button onclick="window.togglePrivacy()" class="p-2 rounded-full hover:bg-white/10 transition print-hidden"><svg id="privacyIcon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
                             </div>
-                            <div class="space-y-2 mb-6 text-[11px] font-bold">
+                            <div class="space-y-2 mb-4 text-[11px] font-bold">
                                 <div class="flex justify-between"><span id="lblGross" class="text-white/60 uppercase"></span><span id="valGross" class="text-amber-500 font-black">0</span></div>
                                 <div class="flex justify-between"><span id="lblAdv" class="text-white/60 uppercase"></span><span id="valAdvance" class="text-pink-500 font-black">0</span></div>
                             </div>
-                            <button id="btnAddAdv" onclick="window.openAdvInput()" class="w-full py-4 bg-pink-600 text-white font-black rounded-2xl text-[10px] uppercase shadow-lg active:scale-95 transition print-hidden"></button>
+                            <button id="btnAddAdv" onclick="window.openAdvInput()" class="w-full py-3 bg-pink-600 text-white font-black rounded-2xl text-[10px] uppercase shadow-lg active:scale-95 transition print-hidden mb-4"></button>
+                            <!-- Advance History Table -->
+                            <div id="advHistoryWrap" class="print-hidden">
+                                <p class="text-[9px] font-black uppercase text-zinc-600 mb-2 tracking-widest">Advance History</p>
+                                <div class="overflow-y-auto max-h-[180px] rounded-xl border border-zinc-800">
+                                    <table class="w-full text-left adv-table" style="font-size:10px;">
+                                        <thead class="sticky top-0 bg-zinc-900">
+                                            <tr>
+                                                <th class="px-3 py-2 text-zinc-500 font-black uppercase text-[8px]">Date</th>
+                                                <th class="px-3 py-2 text-zinc-500 font-black uppercase text-[8px]">Amount</th>
+                                                <th class="px-3 py-2 text-zinc-500 font-black uppercase text-[8px]">Note</th>
+                                                <th class="px-3 py-2 text-right text-zinc-500 font-black uppercase text-[8px]">Act</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="advBody" class="divide-y divide-zinc-800"></tbody>
+                                    </table>
+                                    <p id="advEmpty" class="text-center text-zinc-600 text-[10px] py-4 hidden">No advances this month</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -454,6 +509,21 @@
                 </div>
             </div>
         </main>
+
+        <!-- Footer -->
+        <footer class="border-t border-zinc-900 mt-16 py-6 print-hidden">
+            <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-zinc-700 text-[10px] font-black uppercase tracking-widest">🧺 I Laundry Service By Fon</span>
+                </div>
+                <p class="text-[9px] text-zinc-700 font-medium text-center">
+                    Designed &amp; owned by <span class="text-zinc-500 font-black">Thevann</span> · All rights reserved © 2026
+                </p>
+                <p class="text-[9px] text-zinc-700 font-medium">
+                    Contact: <span class="text-zinc-500 font-bold">LINE @thevann3.0</span>
+                </p>
+            </div>
+        </footer>
     </div>
 
     <!-- POPUP MODAL -->
@@ -507,15 +577,30 @@
         // Admin inspect: which user's data we are viewing
         let inspectingEmail = null;
 
-        // ✅ UPDATE 3: Register page language selection
+        // ✅ Register page translations
+        const regTrans = {
+            en: { title: 'Join Us', sub: 'Create a new account with your email.', namePH: 'Your unique name', emailPH: 'you@example.com', passPH: 'Min. 6 characters', btn: 'Register Account', back: 'Already have an account? Sign In' },
+            mm: { title: 'အကောင့်ဖွင့်ရန်', sub: 'Email နဲ့ အကောင့်သစ်တစ်ခု ဖွင့်ပါ', namePH: 'သင့်နာမည်', emailPH: 'you@example.com', passPH: 'အနည်းဆုံး ၆ လုံး', btn: 'အကောင့်ဖွင့်မည်', back: 'အကောင့်ရှိပြီးသားဆိုရင်? ဝင်ရန်' },
+            th: { title: 'สมัครสมาชิก', sub: 'สร้างบัญชีใหม่ด้วยอีเมลของคุณ', namePH: 'ชื่อของคุณ', emailPH: 'you@example.com', passPH: 'อย่างน้อย 6 ตัวอักษร', btn: 'สมัครสมาชิก', back: 'มีบัญชีอยู่แล้ว? เข้าสู่ระบบ' }
+        };
+
+        // ✅ UPDATE 3: Register page language selection - now also updates text
         let regLang = 'en';
         function setRegLang(lang) {
             regLang = lang;
+            window.state.lang = lang;
             ['en','mm','th'].forEach(l => {
                 const btn = document.getElementById('langBtn-' + l);
                 if(btn) btn.className = 'lang-option-btn' + (l === lang ? ' active' : '');
             });
-            window.state.lang = lang;
+            const rt = regTrans[lang] || regTrans.en;
+            document.getElementById('reg-title').textContent = rt.title;
+            document.getElementById('reg-subtitle').textContent = rt.sub;
+            document.getElementById('reg-username').placeholder = rt.namePH;
+            document.getElementById('reg-email').placeholder = rt.emailPH;
+            document.getElementById('reg-password').placeholder = rt.passPH;
+            document.getElementById('reg-btn').textContent = rt.btn;
+            document.getElementById('reg-back').textContent = rt.back;
             window.updateLangUI();
         }
 
@@ -647,6 +732,7 @@
                     // Load admin's own data
                     await loadFromCloud(user.email);
                     unlockApp("ADMIN ACCESS");
+                    loadSubHistory(); // auto-load subscription list
                 } else {
                     document.getElementById('admin-panel').style.display = 'none';
                     // Load user's cloud data first
@@ -866,6 +952,8 @@
                     </td>`; 
                 body.appendChild(tr);
             });
+            // Render advance history
+            window.renderAdvHistory();
         };
 
         window.cycleLang = () => { 
@@ -933,6 +1021,62 @@
             emp.limitIn = document.getElementById('setInTime').value; 
             window.saveDB(); 
             window.renderDetail(); 
+        };
+
+        // ✅ Advance History Renderer
+        window.renderAdvHistory = () => {
+            const emp = employees.find(e => e.id === window.state.id);
+            const mStr = window.state.date.toISOString().slice(0, 7);
+            const advList = (emp.advances || []).filter(a => a.date.startsWith(mStr)).sort((a,b) => new Date(b.date) - new Date(a.date));
+            const body = document.getElementById('advBody');
+            const empty = document.getElementById('advEmpty');
+            if(!body) return;
+            body.innerHTML = '';
+            if(advList.length === 0) {
+                empty && (empty.classList.remove('hidden'));
+                return;
+            }
+            empty && (empty.classList.add('hidden'));
+            advList.forEach(a => {
+                const tr = document.createElement('tr');
+                tr.className = 'transition-colors';
+                tr.innerHTML = `<td class="px-3 py-2 text-zinc-300 font-bold">${a.date}</td>
+                    <td class="px-3 py-2 text-pink-400 font-black">฿${a.amount.toLocaleString()}</td>
+                    <td class="px-3 py-2 text-zinc-500 italic text-[9px] max-w-[80px] truncate">${a.note || '-'}</td>
+                    <td class="px-3 py-2 text-right">
+                        <button onclick="window.editAdv(${a.id})" class="p-1 text-zinc-600 hover:text-emerald-500 transition mr-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+                        </button>
+                        <button onclick="window.confirmDelAdv(${a.id})" class="p-1 text-zinc-600 hover:text-red-500 transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg>
+                        </button>
+                    </td>`;
+                body.appendChild(tr);
+            });
+        };
+
+        window.editAdv = (id) => {
+            const emp = employees.find(e => e.id === window.state.id);
+            const a = (emp.advances || []).find(x => x.id === id);
+            if(!a) return;
+            window.showInput('Edit Advance', [
+                { id: 'aD', label: 'Date', type: 'date', value: a.date },
+                { id: 'aA', label: 'Amount', type: 'number', value: a.amount },
+                { id: 'aN', label: 'Note', type: 'text', value: a.note || '' }
+            ], (v) => {
+                if(v.aA) {
+                    emp.advances = emp.advances.map(x => x.id === id ? { ...x, date: v.aD, amount: parseFloat(v.aA), note: v.aN } : x);
+                    window.saveDB(); window.renderDetail();
+                }
+            });
+        };
+
+        window.confirmDelAdv = (id) => {
+            triggerPopup('delete', () => {
+                const emp = employees.find(e => e.id === window.state.id);
+                emp.advances = (emp.advances || []).filter(x => x.id !== id);
+                window.saveDB(); window.renderDetail();
+            });
         };
 
         window.openAdvInput = () => window.showInput(trans[window.state.lang].addAdv, [
@@ -1069,9 +1213,69 @@
         async function approveUser() {
             const email = document.getElementById('target-email').value.trim().toLowerCase();
             const days = parseInt(document.getElementById('sub-days').value);
+            if(!email) return alert("Please enter user email.");
             const expiry = Date.now() + (days * 24 * 60 * 60 * 1000);
-            await db.collection('subscriptions').doc(email).set({ expiry, approved: true });
-            alert("✅ Approved! " + email + " now has " + days + " days access.");
+            const expiryDate = new Date(expiry).toLocaleDateString();
+            // Save subscription
+            await db.collection('subscriptions').doc(email).set({ expiry, approved: true, approvedAt: Date.now(), days });
+            // Log history entry
+            await db.collection('subHistory').add({ email, days, expiry, approvedAt: Date.now(), action: 'approved' });
+            alert(`✅ Approved! ${email} — ${days} days access until ${expiryDate}`);
+            loadSubHistory();
+        }
+
+        async function extendUser(email, currentExpiry) {
+            const days = parseInt(document.getElementById('sub-days').value);
+            // Extend from current expiry if still active, else from now
+            const base = currentExpiry > Date.now() ? currentExpiry : Date.now();
+            const newExpiry = base + (days * 24 * 60 * 60 * 1000);
+            await db.collection('subscriptions').doc(email).update({ expiry: newExpiry });
+            await db.collection('subHistory').add({ email, days, expiry: newExpiry, approvedAt: Date.now(), action: 'extended' });
+            alert(`✅ Extended! ${email} — +${days} days`);
+            loadSubHistory();
+        }
+
+        async function revokeUser(email) {
+            if(!confirm(`Revoke access for ${email}?`)) return;
+            await db.collection('subscriptions').doc(email).update({ expiry: Date.now() - 1 });
+            await db.collection('subHistory').add({ email, days: 0, expiry: 0, approvedAt: Date.now(), action: 'revoked' });
+            loadSubHistory();
+        }
+
+        async function loadSubHistory() {
+            const body = document.getElementById('subHistoryBody');
+            body.innerHTML = '<tr><td colspan="5" class="px-4 py-4 text-center text-zinc-600 text-xs font-bold">Loading...</td></tr>';
+            try {
+                const snap = await db.collection('subscriptions').get();
+                if(snap.empty) {
+                    body.innerHTML = '<tr><td colspan="5" class="px-4 py-6 text-center text-zinc-600 text-xs font-bold">No subscribers yet</td></tr>';
+                    return;
+                }
+                body.innerHTML = '';
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    const email = doc.id;
+                    const isActive = d.expiry > Date.now();
+                    const daysLeft = isActive ? Math.ceil((d.expiry - Date.now()) / 86400000) : 0;
+                    const expiryStr = new Date(d.expiry).toLocaleDateString();
+                    const tr = document.createElement('tr');
+                    tr.className = 'border-b border-zinc-800 hover:bg-zinc-900/30 transition';
+                    tr.innerHTML = `
+                        <td class="px-4 py-3 text-white font-bold text-xs">${email}</td>
+                        <td class="px-4 py-3"><span class="${isActive ? 'sub-active' : 'sub-expired'}">${isActive ? 'Active' : 'Expired'}</span></td>
+                        <td class="px-4 py-3 text-zinc-400 text-xs font-medium">${expiryStr}</td>
+                        <td class="px-4 py-3 text-xs font-black ${daysLeft <= 5 ? 'text-red-400' : daysLeft <= 10 ? 'text-amber-400' : 'text-emerald-400'}">${isActive ? daysLeft + 'd' : '–'}</td>
+                        <td class="px-4 py-3 text-right flex justify-end gap-2">
+                            <button onclick="document.getElementById('target-email').value='${email}'; extendUser('${email}', ${d.expiry})" 
+                                class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-[9px] font-black uppercase transition">+Extend</button>
+                            <button onclick="revokeUser('${email}')" 
+                                class="px-3 py-1.5 bg-red-600/70 hover:bg-red-600 text-white rounded-lg text-[9px] font-black uppercase transition">Revoke</button>
+                        </td>`;
+                    body.appendChild(tr);
+                });
+            } catch(e) {
+                body.innerHTML = `<tr><td colspan="5" class="px-4 py-4 text-center text-red-500 text-xs font-bold">Error: ${e.message}</td></tr>`;
+            }
         }
 
         window.onload = () => { 
