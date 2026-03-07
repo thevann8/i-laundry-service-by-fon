@@ -29,7 +29,7 @@
         .card-ui { border-radius: 2rem; background-color: #0c0c0e; border: 1px solid #1c1c1f; transition: all 0.2s ease; }
         .auth-input { background: #151518; border: 1px solid #2d2d30; border-radius: 1.25rem; padding: 1.2rem; color: white; width: 100%; outline: none; transition: 0.3s; }
         .auth-input:focus { border-color: #80ffaa; background: #1a1a1d; }
-        #app-content, #admin-panel, #auth-page, #register-section, #forgot-section { display: none; }
+        #app-content, #admin-panel, #auth-page, #register-section, #forgot-section, #admin-inspect-section { display: none; }
         .locked-card { opacity: 0.2; pointer-events: none; filter: grayscale(1); }
         .pricing-card { border: 2px solid #1c1c1f; padding: 1.5rem; border-radius: 1.5rem; text-align: center; }
         .pricing-card.active { border-color: #00ff88; background: rgba(0,255,136,0.05); }
@@ -38,15 +38,30 @@
         .modal-blur { backdrop-filter: blur(12px); background: rgba(0,0,0,0.8); }
         @media print { .print-hidden { display: none !important; } #printHeader { display: block !important; } }
         #printHeader { display: none; }
+        /* Language picker buttons for PC */
+        .lang-btn-group { display: flex; gap: 8px; }
+        .lang-option-btn { display: flex; align-items: center; gap: 6px; padding: 8px 14px; border: 1px solid #2d2d30; border-radius: 12px; background: #151518; color: #fff; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+        .lang-option-btn:hover { border-color: #80ffaa; background: #1a1a1d; }
+        .lang-option-btn.active { border-color: #80ffaa; background: rgba(128,255,170,0.1); color: #80ffaa; }
+        /* LINE button */
+        .line-btn { background: #06C755; color: white; font-weight: 900; border-radius: 1.25rem; padding: 0.875rem 1.5rem; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; transition: all 0.2s; box-shadow: 0 0 20px rgba(6,199,85,0.25); }
+        .line-btn:hover { background: #05b34c; transform: translateY(-1px); }
+        /* Countdown badge */
+        .countdown-badge { background: rgba(128,255,170,0.1); border: 1px solid rgba(128,255,170,0.3); border-radius: 999px; padding: 2px 10px; font-size: 9px; font-weight: 900; color: #80ffaa; text-transform: uppercase; letter-spacing: 0.05em; }
+        .countdown-badge.warning { background: rgba(251,191,36,0.1); border-color: rgba(251,191,36,0.3); color: #fbbf24; }
+        .countdown-badge.danger { background: rgba(255,49,49,0.1); border-color: rgba(255,49,49,0.3); color: #ff3131; }
+        /* Admin inspect panel */
+        .inspect-panel { background: rgba(6,199,85,0.05); border: 1px solid rgba(6,199,85,0.2); border-radius: 1.5rem; padding: 1.5rem; margin-bottom: 1rem; }
     </style>
 </head>
 <body class="min-h-screen">
 
+    <!-- AUTH PAGE -->
     <div id="auth-page" class="flex items-center justify-center min-h-screen p-6 bg-black">
         <div class="max-w-md w-full space-y-6 p-10 card-ui border border-zinc-900 shadow-2xl text-center">
             
             <div id="login-section" class="space-y-6 text-left">
-                <h1 class="text-3xl font-black tracking-tighter text-center uppercase">I Laundry Pro</h1>
+                <h1 class="text-3xl font-black tracking-tighter text-center uppercase">I Laundry Service By Fon</h1>
                 <p class="text-center text-zinc-500 text-sm font-medium">Sign in with your email or Google.</p>
                 <div class="space-y-4">
                     <input type="email" id="auth-email" class="auth-input" placeholder="Email Address">
@@ -73,9 +88,21 @@
                 </div>
             </div>
 
+            <!-- REGISTER SECTION - ✅ UPDATE 3: Language Picker for PC added here -->
             <div id="register-section" class="space-y-6 text-left">
                 <h1 class="text-3xl font-black tracking-tighter text-center uppercase">Join Us</h1>
                 <p class="text-center text-zinc-500 text-sm font-medium">Create a new account with your email.</p>
+                
+                <!-- Language Picker PC Fix -->
+                <div>
+                    <label class="text-[9px] font-black opacity-60 uppercase block mb-2">🌐 Select Language</label>
+                    <div class="lang-btn-group flex-wrap">
+                        <button onclick="setRegLang('en')" id="langBtn-en" class="lang-option-btn active">🇺🇸 English</button>
+                        <button onclick="setRegLang('mm')" id="langBtn-mm" class="lang-option-btn">🇲🇲 မြန်မာ</button>
+                        <button onclick="setRegLang('th')" id="langBtn-th" class="lang-option-btn">🇹🇭 ภาษาไทย</button>
+                    </div>
+                </div>
+
                 <div class="space-y-4">
                     <input type="text" id="reg-username" class="auth-input" placeholder="Your unique name">
                     <input type="email" id="reg-email" class="auth-input" placeholder="you@example.com">
@@ -97,10 +124,11 @@
         </div>
     </div>
 
+    <!-- ADMIN PANEL -->
     <div id="admin-panel" class="max-w-6xl mx-auto p-6 mt-4">
         <div class="card-ui p-8 bg-zinc-900/40 border-emerald-500/30">
             <h2 class="text-emerald-500 font-black uppercase text-sm mb-6">👑 Admin Control Panel</h2>
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mb-4">
                 <input type="email" id="target-email" class="md:col-span-6 bg-black border border-zinc-800 p-4 rounded-2xl text-sm" placeholder="User Email">
                 <select id="sub-days" class="md:col-span-3 bg-black border border-zinc-800 p-4 rounded-2xl text-sm">
                     <option value="30">1 Month (1499 ฿)</option>
@@ -109,17 +137,32 @@
                 </select>
                 <button onclick="approveUser()" class="md:col-span-3 bg-emerald-500 text-black p-4 rounded-2xl font-black text-xs uppercase">Approve Access</button>
             </div>
+            <!-- ✅ UPDATE 2: Admin Inspect Mode -->
+            <div class="border-t border-zinc-800 pt-4">
+                <h3 class="text-zinc-400 font-black uppercase text-xs mb-3">🔍 Inspect User Data</h3>
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                    <input type="email" id="inspect-email" class="md:col-span-8 bg-black border border-zinc-800 p-4 rounded-2xl text-sm" placeholder="User Email to Inspect...">
+                    <button onclick="adminInspectUser()" class="md:col-span-2 bg-zinc-700 hover:bg-zinc-600 text-white p-4 rounded-2xl font-black text-xs uppercase transition">👁️ Inspect</button>
+                    <button onclick="adminExitInspect()" id="exitInspectBtn" class="md:col-span-2 bg-red-600 hover:bg-red-500 text-white p-4 rounded-2xl font-black text-xs uppercase transition hidden">✕ Exit</button>
+                </div>
+                <div id="inspect-status" class="mt-2 text-xs text-zinc-500 font-bold"></div>
+            </div>
         </div>
     </div>
 
+    <!-- APP CONTENT -->
     <div id="app-content">
         <header class="sticky top-0 z-50 border-b border-zinc-900 bg-black/80 backdrop-blur-xl p-6">
             <div class="max-w-6xl mx-auto flex items-center justify-between">
                 <div class="flex items-center gap-4">
                     <button id="backBtn" onclick="window.goBack()" class="hidden p-2 rounded-xl bg-zinc-900 transition"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m15 18-6-6 6-6"/></svg></button>
                     <div>
-                        <h1 class="text-lg font-black tracking-tight uppercase">🧺 I Laundry Service</h1>
-                        <p id="expiry-status" class="text-[9px] font-black uppercase text-red-500">Access Locked</p>
+                        <h1 class="text-lg font-black tracking-tight uppercase">🧺 I Laundry Service By Fon</h1>
+                        <!-- ✅ UPDATE 4: 30-Day Countdown shown here -->
+                        <div class="flex items-center gap-2 mt-0.5">
+                            <p id="expiry-status" class="text-[9px] font-black uppercase text-red-500">Access Locked</p>
+                            <span id="countdown-badge" class="hidden countdown-badge"></span>
+                        </div>
                     </div>
                 </div>
                 <div class="flex items-center gap-2">
@@ -128,6 +171,17 @@
                 </div>
             </div>
         </header>
+
+        <!-- Admin Inspect Banner -->
+        <div id="admin-inspect-section" class="max-w-6xl mx-auto px-6 pt-4">
+            <div class="inspect-panel flex items-center justify-between">
+                <div>
+                    <p class="text-emerald-400 font-black text-xs uppercase">👁️ Inspecting User Data</p>
+                    <p id="inspect-user-label" class="text-zinc-400 text-xs mt-0.5"></p>
+                </div>
+                <button onclick="adminExitInspect()" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white font-black rounded-xl text-[10px] uppercase transition">✕ Exit Inspect</button>
+            </div>
+        </div>
 
         <main class="max-w-6xl mx-auto p-6">
             <div id="payment-ui" class="space-y-8 mb-12">
@@ -139,7 +193,15 @@
                 <div class="card-ui p-10 bg-zinc-900/20 text-center border-dashed border-zinc-700">
                     <p class="text-xs opacity-40 uppercase font-bold mb-2">Transfer to Krungthai Bank</p>
                     <p class="text-3xl font-black text-emerald-500">3610476982</p>
-                    <p class="text-sm font-bold opacity-70 mb-4 text-white">Account Name: ปิเพียวอ่าว</p>
+                    <p class="text-sm font-bold opacity-70 mb-6 text-white">Account Name: ปิเพียวอ่าว</p>
+                    <!-- ✅ UPDATE 5: LINE button -->
+                    <div class="max-w-xs mx-auto">
+                        <p class="text-xs opacity-40 uppercase font-bold mb-3">Contact via LINE</p>
+                        <button onclick="window.open('https://line.me/ti/p/thevann3.0', '_blank')" class="line-btn">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.07 9.436-6.971C23.176 14.393 24 12.458 24 10.314"/></svg>
+                            LINE: thevann3.0
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -232,6 +294,7 @@
         </main>
     </div>
 
+    <!-- POPUP MODAL -->
     <div id="custom-popup" class="fixed inset-0 z-[200] hidden items-center justify-center modal-blur p-4" onclick="closePopup()">
         <div class="max-w-xs w-full card-ui p-8 text-center space-y-6 border-zinc-800 shadow-2xl" onclick="event.stopPropagation()">
             <div id="popup-icon-container" class="w-16 h-16 mx-auto rounded-full flex items-center justify-center bg-zinc-900 border border-zinc-800">
@@ -248,6 +311,7 @@
         </div>
     </div>
 
+    <!-- INPUT MODAL -->
     <div id="overlay" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/90 backdrop-blur-md p-4" onclick="window.closeModal()">
         <div id="modalContent" class="w-full max-w-sm" onclick="event.stopPropagation()">
             <div id="modalInput" class="hidden rounded-[2.5rem] p-10 card-ui bg-zinc-950">
@@ -273,6 +337,47 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
         const ADMIN_UID = "w9e0rDpSkWgmGTNtb2XhXGVbwO43";
+
+        // ✅ UPDATE 1: Cloud Sync - save/load from Firestore
+        const KEY = 'laundry_v135_thai_final';
+        let employees = JSON.parse(localStorage.getItem(KEY)) || [];
+        let currentUserEmail = null;
+        // Admin inspect: which user's data we are viewing
+        let inspectingEmail = null;
+
+        // ✅ UPDATE 3: Register page language selection
+        let regLang = 'en';
+        function setRegLang(lang) {
+            regLang = lang;
+            ['en','mm','th'].forEach(l => {
+                const btn = document.getElementById('langBtn-' + l);
+                if(btn) btn.className = 'lang-option-btn' + (l === lang ? ' active' : '');
+            });
+            window.state.lang = lang;
+            window.updateLangUI();
+        }
+
+        // ✅ UPDATE 1: Cloud Sync helpers
+        async function syncToCloud(email, data) {
+            if (!email) return;
+            try {
+                await db.collection('userData').doc(email.toLowerCase()).set({ employees: JSON.stringify(data), updatedAt: Date.now() });
+            } catch(e) { console.warn('Cloud sync error:', e); }
+        }
+
+        async function loadFromCloud(email) {
+            try {
+                const doc = await db.collection('userData').doc(email.toLowerCase()).get();
+                if (doc.exists && doc.data().employees) {
+                    const cloudData = JSON.parse(doc.data().employees);
+                    // merge: cloud takes priority
+                    employees = cloudData;
+                    localStorage.setItem(KEY, JSON.stringify(employees));
+                    return true;
+                }
+            } catch(e) { console.warn('Cloud load error:', e); }
+            return false;
+        }
 
         // --- AUTH LOGIC ---
         function toggleAuthView(view) {
@@ -329,6 +434,14 @@
             auth.signOut().then(() => { localStorage.clear(); location.reload(); }); 
         }
 
+        function sendResetEmail() {
+            const email = document.getElementById('reset-email').value;
+            if(!email) return alert("Please enter your email.");
+            auth.sendPasswordResetEmail(email)
+                .then(() => { alert("Reset link sent! Check your email."); toggleAuthView('login'); })
+                .catch(e => alert(e.message));
+        }
+
         // --- MODERN POP-UP SYSTEM ---
         function triggerPopup(type, onConfirm) {
             const modal = document.getElementById('custom-popup');
@@ -351,9 +464,7 @@
 
         function closePopup() { document.getElementById('custom-popup').classList.replace('flex', 'hidden'); }
 
-        // --- APP LOGIC ---
-        const KEY = 'laundry_v135_thai_final';
-        let employees = JSON.parse(localStorage.getItem(KEY)) || [];
+        // --- APP STATE ---
         window.state = { id: null, lang: 'en', date: new Date(), isSubscribed: false, privacy: false, editId: null };
 
         const trans = {
@@ -362,15 +473,22 @@
             th: { flag: "🇹🇭 TH", sub: "ระบบติดตามเวลา", addE: "👤 เพิ่มพนักงาน", today: "📍 วันนี้", offD: "วันหยุด", worked: "💼 ทำงาน", hrs: "🕒 ชั่วโมง", plOff: "ใช่วันหยุด", unOff: "ไม่ใช่วันหยุด", net: "💵 รายได้สุทธิ", gross: "รายได้รวม", adv: "เงินเบิก", addAdv: "💸 เพิ่มเงินเบิก", date: "วันที่", in: "เข้า", out: "ออก", note: "บันทึก", add: "➕ เพิ่ม", up: "แก้ไข", dayOff: "🏠 วันหยุด", thDate: "วันที่", thInOut: "เข้า/ออก", thDur: "เวลา", thRound: "ปัดเศษ", thEarn: "รายได้", thNote: "บันทึก", thAction: "จัดการ", mDays: "🗓️ วันในเดือน", offT: "🏠 วันหยุดรวม", late: "มาสาย", entry: "เวลาเข้างาน", plun: "ใช่หยุด/ไม่ใช่" }
         };
 
-        auth.onAuthStateChanged(user => {
+        // ✅ UPDATE 1 + 2: Auth state with Cloud Sync & Admin Inspect
+        auth.onAuthStateChanged(async user => {
             if (user && user.emailVerified) {
+                currentUserEmail = user.email;
                 document.getElementById('auth-page').style.display = 'none';
                 document.getElementById('app-content').style.display = 'block';
+
                 if(user.uid === ADMIN_UID) {
                     document.getElementById('admin-panel').style.display = 'block';
+                    // Load admin's own data
+                    await loadFromCloud(user.email);
                     unlockApp("ADMIN ACCESS");
                 } else {
                     document.getElementById('admin-panel').style.display = 'none';
+                    // Load user's cloud data first
+                    await loadFromCloud(user.email);
                     checkAccess(user.email);
                 }
                 window.renderList(); window.updateLangUI();
@@ -384,9 +502,29 @@
         function checkAccess(email) {
             db.collection('subscriptions').doc(email.toLowerCase()).onSnapshot(doc => {
                 const data = doc.data();
-                if (data && data.expiry > Date.now()) unlockApp(Math.ceil((data.expiry-Date.now())/86400000) + " Days Left");
-                else lockApp();
+                if (data && data.expiry > Date.now()) {
+                    const daysLeft = Math.ceil((data.expiry - Date.now()) / 86400000);
+                    // ✅ UPDATE 4: 30-Day Countdown
+                    updateCountdown(daysLeft);
+                    unlockApp(daysLeft + " Days Left");
+                } else {
+                    lockApp();
+                }
             });
+        }
+
+        // ✅ UPDATE 4: Countdown badge logic
+        function updateCountdown(daysLeft) {
+            const badge = document.getElementById('countdown-badge');
+            badge.classList.remove('hidden');
+            badge.textContent = daysLeft + " Days Left";
+            if(daysLeft <= 5) {
+                badge.className = 'countdown-badge danger';
+            } else if(daysLeft <= 10) {
+                badge.className = 'countdown-badge warning';
+            } else {
+                badge.className = 'countdown-badge';
+            }
         }
 
         function unlockApp(msg) {
@@ -403,33 +541,102 @@
             window.state.isSubscribed = false;
         }
 
+        // ✅ UPDATE 2: Admin Inspect Mode
+        async function adminInspectUser() {
+            const email = document.getElementById('inspect-email').value.trim().toLowerCase();
+            if(!email) return;
+            const statusEl = document.getElementById('inspect-status');
+            statusEl.textContent = '⏳ Loading data for ' + email + '...';
+
+            try {
+                const doc = await db.collection('userData').doc(email).get();
+                if(doc.exists && doc.data().employees) {
+                    employees = JSON.parse(doc.data().employees);
+                    inspectingEmail = email;
+
+                    // Show inspect banner
+                    document.getElementById('admin-inspect-section').style.display = 'block';
+                    document.getElementById('inspect-user-label').textContent = 'Viewing: ' + email;
+                    document.getElementById('exitInspectBtn').classList.remove('hidden');
+                    statusEl.textContent = '✅ Loaded ' + employees.length + ' employees for ' + email;
+
+                    // Unlock features to allow editing
+                    document.getElementById('locked-features').classList.remove('locked-card');
+                    document.getElementById('payment-ui').style.display = 'none';
+
+                    window.renderList();
+                    // Go back to list
+                    window.state.id = null;
+                    document.getElementById('listView').classList.remove('hidden');
+                    document.getElementById('detailView').classList.add('hidden');
+                    document.getElementById('backBtn').classList.add('hidden');
+                } else {
+                    statusEl.textContent = '⚠️ No data found for ' + email;
+                }
+            } catch(e) {
+                statusEl.textContent = '❌ Error: ' + e.message;
+            }
+        }
+
+        async function adminExitInspect() {
+            // Save any changes made back to the inspected user's cloud
+            if(inspectingEmail) {
+                await syncToCloud(inspectingEmail, employees);
+            }
+            inspectingEmail = null;
+
+            // Reload admin's own data
+            await loadFromCloud(currentUserEmail);
+            document.getElementById('admin-inspect-section').style.display = 'none';
+            document.getElementById('exitInspectBtn').classList.add('hidden');
+            document.getElementById('inspect-status').textContent = '';
+            window.state.id = null;
+            document.getElementById('listView').classList.remove('hidden');
+            document.getElementById('detailView').classList.add('hidden');
+            document.getElementById('backBtn').classList.add('hidden');
+            window.renderList();
+        }
+
         // --- DASHBOARD FUNCTIONS ---
-        window.saveDB = () => localStorage.setItem(KEY, JSON.stringify(employees));
+        // ✅ UPDATE 1: saveDB syncs to both localStorage AND Firestore
+        window.saveDB = async () => {
+            localStorage.setItem(KEY, JSON.stringify(employees));
+            const targetEmail = inspectingEmail || currentUserEmail;
+            if(targetEmail) await syncToCloud(targetEmail, employees);
+        };
+
         window.fmtNum = (n) => window.state.privacy ? '****' : n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
         window.renderList = () => {
-            const grid = document.getElementById('workerGrid'); const q = document.getElementById('searchInput').value.toLowerCase(); grid.innerHTML = '';
+            const grid = document.getElementById('workerGrid'); 
+            const q = document.getElementById('searchInput').value.toLowerCase(); 
+            grid.innerHTML = '';
             employees.forEach(emp => {
                 if(emp.name.toLowerCase().includes(q)) {
-                    const card = document.createElement('div'); card.className = "card-ui p-6 flex justify-between items-center cursor-pointer hover:bg-zinc-900 transition border border-zinc-800";
+                    const card = document.createElement('div'); 
+                    card.className = "card-ui p-6 flex justify-between items-center cursor-pointer hover:bg-zinc-900 transition border border-zinc-800";
                     card.onclick = (e) => { if(!e.target.closest('button')) window.selectWorker(emp.id); };
                     card.innerHTML = `<div><h3 class="font-black text-white text-lg">${emp.name}</h3><p class="text-[9px] opacity-40 uppercase font-black">${emp.records.length} Records</p></div>
                     <div class="flex gap-2"><button onclick="window.openRenameModal(${emp.id})" class="p-2 text-zinc-500 hover:text-emerald-500 transition"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></button>
-                    <button onclick="window.confirmDelWorker(${emp.id})" class="p-2 text-zinc-500 hover:text-red-500 transition"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg></button></div>`; grid.appendChild(card);
+                    <button onclick="window.confirmDelWorker(${emp.id})" class="p-2 text-zinc-500 hover:text-red-500 transition"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg></button></div>`; 
+                    grid.appendChild(card);
                 }
             });
         };
 
         window.selectWorker = (id) => {
-            window.state.id = id; const emp = employees.find(e => e.id === id);
-            document.getElementById('listView').classList.add('hidden'); document.getElementById('detailView').classList.remove('hidden');
+            window.state.id = id; 
+            const emp = employees.find(e => e.id === id);
+            document.getElementById('listView').classList.add('hidden'); 
+            document.getElementById('detailView').classList.remove('hidden');
             document.getElementById('backBtn').classList.remove('hidden');
             document.getElementById('setInTime').value = emp.limitIn || "";
             window.renderDetail();
         };
 
         window.renderDetail = () => {
-            const emp = employees.find(e => e.id === window.state.id); const l = trans[window.state.lang];
+            const emp = employees.find(e => e.id === window.state.id); 
+            const l = trans[window.state.lang];
             const mStr = window.state.date.toISOString().slice(0, 7);
             document.getElementById('monthLabel').textContent = window.state.date.toLocaleString(window.state.lang, { month: 'long', year: 'numeric' });
             const records = emp.records.filter(r => r.date.startsWith(mStr)).sort((a,b) => new Date(b.date) - new Date(a.date));
@@ -456,39 +663,68 @@
             records.forEach(r => {
                 const isPl = r.isDayOff && new Date(r.date).getDay() == (emp.offDay || 0);
                 const isLate = !r.isDayOff && emp.limitIn && r.in > emp.limitIn;
-                const tr = document.createElement('tr'); tr.className = `${r.isDayOff ? (isPl ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500') : (isLate ? 'row-late' : 'hover:bg-zinc-900/30')} transition-colors`;
+                const tr = document.createElement('tr'); 
+                tr.className = `${r.isDayOff ? (isPl ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500') : (isLate ? 'row-late' : 'hover:bg-zinc-900/30')} transition-colors`;
                 tr.innerHTML = `<td class="px-6 py-4 font-black text-xs">${r.date}<br><span class="text-[8px] opacity-70 uppercase">${new Date(r.date).toLocaleDateString(window.state.lang, {weekday:'long'})}</span></td>
-                    <td class="px-6 py-4 font-mono text-[10px] ${isLate ? 'text-amber-500 font-bold' : 'opacity-80'}">${r.in} ➔ ${r.out}</td><td class="px-6 py-4 text-xs font-bold">${r.isDayOff ? '-' : r.durStr}</td>
+                    <td class="px-6 py-4 font-mono text-[10px] ${isLate ? 'text-amber-500 font-bold' : 'opacity-80'}">${r.in} ➔ ${r.out}</td>
+                    <td class="px-6 py-4 text-xs font-bold">${r.isDayOff ? '-' : r.durStr}</td>
                     <td class="px-6 py-4 font-black text-emerald-500">${r.rounded > 0 ? r.rounded.toFixed(2) : '-'}</td>
                     <td class="px-6 py-4 font-black text-xs">${r.isDayOff ? (isPl ? l.plOff : l.unOff) : '฿'+(r.rounded*40).toLocaleString()}</td>
                     <td class="px-6 py-4 text-xs opacity-70 italic max-w-[120px] truncate text-white">${r.task || '-'}</td>
-                    <td class="px-6 py-4 text-right flex justify-end gap-2 print-hidden"><button onclick="window.editRec(${r.id})" class="p-1 text-zinc-400 hover:text-emerald-500 transition"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></button>
-                    <button onclick="window.confirmDelRec(${r.id})" class="p-1 text-zinc-400 hover:text-red-500 transition"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg></button></td>`; body.appendChild(tr);
+                    <td class="px-6 py-4 text-right flex justify-end gap-2 print-hidden">
+                        <button onclick="window.editRec(${r.id})" class="p-1 text-zinc-400 hover:text-emerald-500 transition"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></button>
+                        <button onclick="window.confirmDelRec(${r.id})" class="p-1 text-zinc-400 hover:text-red-500 transition"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg></button>
+                    </td>`; 
+                body.appendChild(tr);
             });
         };
 
-        window.cycleLang = () => { const l = ['en', 'mm', 'th']; window.state.lang = l[(l.indexOf(window.state.lang) + 1) % 3]; window.updateLangUI(); if(window.state.id) window.renderDetail(); else window.renderList(); };
+        window.cycleLang = () => { 
+            const l = ['en', 'mm', 'th']; 
+            window.state.lang = l[(l.indexOf(window.state.lang) + 1) % 3]; 
+            window.updateLangUI(); 
+            if(window.state.id) window.renderDetail(); else window.renderList(); 
+        };
+
         window.updateLangUI = () => {
-            const l = trans[window.state.lang]; document.getElementById('langBtn').textContent = l.flag;
-            document.getElementById('btnAddWorker').textContent = l.addE; document.getElementById('btnToday').textContent = l.today;
-            document.getElementById('lblOffDay').textContent = l.offD; document.getElementById('lblWorked').textContent = l.worked;
-            document.getElementById('lblHours').textContent = l.hrs; document.getElementById('lblMonthDays').textContent = l.mDays;
-            document.getElementById('lblOffTotal').textContent = l.offT; document.getElementById('lblNetTotal').textContent = l.net;
-            document.getElementById('lblGross').textContent = l.gross; document.getElementById('lblAdv').textContent = l.adv;
-            document.getElementById('formDate').textContent = l.date; document.getElementById('formIn').textContent = l.in;
-            document.getElementById('formOut').textContent = l.out; document.getElementById('formNote').textContent = l.note;
-            document.getElementById('btnAdd').textContent = window.state.editId ? l.up : l.add; document.getElementById('btnDayOff').textContent = l.dayOff;
-            document.getElementById('thDate').textContent = l.thDate; document.getElementById('thInOut').textContent = l.thInOut;
-            document.getElementById('thDur').textContent = l.thDur; document.getElementById('thRound').textContent = l.thRound;
-            document.getElementById('thEarn').textContent = l.thEarn; document.getElementById('thNote').textContent = l.thNote;
-            document.getElementById('thAction').textContent = l.thAction; document.getElementById('lblProfileDesc').textContent = l.sub;
-            document.getElementById('lblLate').textContent = l.late; document.getElementById('lblPlUnpl').textContent = l.plun;
-            document.getElementById('lblEntry').textContent = l.entry + ":"; document.getElementById('btnAddAdv').textContent = l.addAdv;
+            const l = trans[window.state.lang]; 
+            document.getElementById('langBtn').textContent = l.flag;
+            document.getElementById('btnAddWorker').textContent = l.addE; 
+            document.getElementById('btnToday').textContent = l.today;
+            document.getElementById('lblOffDay').textContent = l.offD; 
+            document.getElementById('lblWorked').textContent = l.worked;
+            document.getElementById('lblHours').textContent = l.hrs; 
+            document.getElementById('lblMonthDays').textContent = l.mDays;
+            document.getElementById('lblOffTotal').textContent = l.offT; 
+            document.getElementById('lblNetTotal').textContent = l.net;
+            document.getElementById('lblGross').textContent = l.gross; 
+            document.getElementById('lblAdv').textContent = l.adv;
+            document.getElementById('formDate').textContent = l.date; 
+            document.getElementById('formIn').textContent = l.in;
+            document.getElementById('formOut').textContent = l.out; 
+            document.getElementById('formNote').textContent = l.note;
+            document.getElementById('btnAdd').textContent = window.state.editId ? l.up : l.add; 
+            document.getElementById('btnDayOff').textContent = l.dayOff;
+            document.getElementById('thDate').textContent = l.thDate; 
+            document.getElementById('thInOut').textContent = l.thInOut;
+            document.getElementById('thDur').textContent = l.thDur; 
+            document.getElementById('thRound').textContent = l.thRound;
+            document.getElementById('thEarn').textContent = l.thEarn; 
+            document.getElementById('thNote').textContent = l.thNote;
+            document.getElementById('thAction').textContent = l.thAction; 
+            document.getElementById('lblProfileDesc').textContent = l.sub;
+            document.getElementById('lblLate').textContent = l.late; 
+            document.getElementById('lblPlUnpl').textContent = l.plun;
+            document.getElementById('lblEntry').textContent = l.entry + ":"; 
+            document.getElementById('btnAddAdv').textContent = l.addAdv;
         };
 
         window.saveRecord = (isOff) => {
             const emp = employees.find(e => e.id === window.state.id);
-            const d = document.getElementById('inDate').value, i = document.getElementById('inIn').value, o = document.getElementById('inOut').value, n = document.getElementById('inTask').value;
+            const d = document.getElementById('inDate').value, 
+                  i = document.getElementById('inIn').value, 
+                  o = document.getElementById('inOut').value, 
+                  n = document.getElementById('inTask').value;
             if(!isOff && (!i || !o)) return;
             const [h1, m1] = i.split(':').map(Number), [h2, m2] = o.split(':').map(Number);
             let diff = (h2 * 60 + m2) - (h1 * 60 + m1); if(diff < 0) diff += 24 * 60;
@@ -497,55 +733,148 @@
             if(window.state.editId) { emp.records = emp.records.map(x => x.id === window.state.editId ? rec : x); window.state.editId = null; }
             else emp.records.push(rec);
             window.saveDB(); window.renderDetail();
-            document.getElementById('inIn').value = ''; document.getElementById('inOut').value = ''; document.getElementById('inTask').value = '';
+            document.getElementById('inIn').value = ''; 
+            document.getElementById('inOut').value = ''; 
+            document.getElementById('inTask').value = '';
             document.getElementById('btnAdd').textContent = trans[window.state.lang].add;
         };
 
-        window.updateEntryTime = () => { const emp = employees.find(e => e.id === window.state.id); emp.limitIn = document.getElementById('setInTime').value; window.saveDB(); window.renderDetail(); };
-        window.openAdvInput = () => window.showInput(trans[window.state.lang].addAdv, [{ id: 'aD', label: "Date", type: 'date', value: new Date().toISOString().slice(0, 10) }, { id: 'aA', label: "Amount", type: 'number', value: '' }, { id: 'aN', label: "Note", type: 'text', value: '' }], (v) => { if(v.aA) { const emp = employees.find(e => e.id === window.state.id); (emp.advances = emp.advances || []).push({ id: Date.now(), date: v.aD, amount: parseFloat(v.aA), note: v.aN }); window.saveDB(); window.renderDetail(); } });
+        window.updateEntryTime = () => { 
+            const emp = employees.find(e => e.id === window.state.id); 
+            emp.limitIn = document.getElementById('setInTime').value; 
+            window.saveDB(); 
+            window.renderDetail(); 
+        };
+
+        window.openAdvInput = () => window.showInput(trans[window.state.lang].addAdv, [
+            { id: 'aD', label: "Date", type: 'date', value: new Date().toISOString().slice(0, 10) }, 
+            { id: 'aA', label: "Amount", type: 'number', value: '' }, 
+            { id: 'aN', label: "Note", type: 'text', value: '' }
+        ], (v) => { 
+            if(v.aA) { 
+                const emp = employees.find(e => e.id === window.state.id); 
+                (emp.advances = emp.advances || []).push({ id: Date.now(), date: v.aD, amount: parseFloat(v.aA), note: v.aN }); 
+                window.saveDB(); 
+                window.renderDetail(); 
+            } 
+        });
         
         window.showInput = (title, fields, onOk) => {
             document.getElementById('modalTitle').textContent = title; 
-            const container = document.getElementById('inputFields'); container.innerHTML = '';
+            const container = document.getElementById('inputFields'); 
+            container.innerHTML = '';
             fields.forEach(f => container.innerHTML += `<div class="mb-4"><label class="text-[9px] opacity-60 block mb-1 uppercase font-black text-white">${f.label}</label><input id="${f.id}" type="${f.type}" value="${f.value}" class="w-full card-ui p-3 outline-none focus:border-emerald-500 transition text-white bg-zinc-900 border-zinc-800"></div>`);
-            document.getElementById('overlay').classList.replace('hidden', 'flex'); document.getElementById('modalInput').classList.remove('hidden'); 
-            document.getElementById('modalOk').onclick = () => { const res = {}; fields.forEach(f => res[f.id] = document.getElementById(f.id).value); onOk(res); window.closeModal(); };
+            document.getElementById('overlay').classList.replace('hidden', 'flex'); 
+            document.getElementById('modalInput').classList.remove('hidden'); 
+            document.getElementById('modalOk').onclick = () => { 
+                const res = {}; 
+                fields.forEach(f => res[f.id] = document.getElementById(f.id).value); 
+                onOk(res); 
+                window.closeModal(); 
+            };
         };
 
         window.openMonthSelector = () => {
             const ms = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             const fields = ms.map((m, i) => `<button onclick="window.setMonth(${i})" class="w-full p-4 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-emerald-500 transition font-black text-sm text-white mb-2 text-left">${m}</button>`).join('');
-            document.getElementById('modalTitle').textContent = "🗓️ Select Month"; document.getElementById('inputFields').innerHTML = fields;
-            document.getElementById('overlay').classList.replace('hidden', 'flex'); document.getElementById('modalInput').classList.remove('hidden');
+            document.getElementById('modalTitle').textContent = "🗓️ Select Month"; 
+            document.getElementById('inputFields').innerHTML = fields;
+            document.getElementById('overlay').classList.replace('hidden', 'flex'); 
+            document.getElementById('modalInput').classList.remove('hidden');
         };
         window.setMonth = (m) => { window.state.date.setMonth(m); window.renderDetail(); window.closeModal(); };
 
         window.openOffDaySelector = () => {
             const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
             const fields = days.map((d, i) => `<button onclick="window.updateWorkerOffDay(${i})" class="w-full p-4 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-emerald-500 transition font-black text-sm text-white mb-2 text-left">${d}</button>`).join('');
-            document.getElementById('modalTitle').textContent = "Choose Off Day"; document.getElementById('inputFields').innerHTML = fields;
-            document.getElementById('overlay').classList.replace('hidden', 'flex'); document.getElementById('modalInput').classList.remove('hidden');
+            document.getElementById('modalTitle').textContent = "Choose Off Day"; 
+            document.getElementById('inputFields').innerHTML = fields;
+            document.getElementById('overlay').classList.replace('hidden', 'flex'); 
+            document.getElementById('modalInput').classList.remove('hidden');
         };
-        window.updateWorkerOffDay = (i) => { const emp = employees.find(e => e.id === window.state.id); emp.offDay = i; window.saveDB(); window.renderDetail(); window.closeModal(); };
+        window.updateWorkerOffDay = (i) => { 
+            const emp = employees.find(e => e.id === window.state.id); 
+            emp.offDay = i; 
+            window.saveDB(); 
+            window.renderDetail(); 
+            window.closeModal(); 
+        };
 
         window.closeModal = () => document.getElementById('overlay').classList.replace('flex', 'hidden');
-        window.goBack = () => { window.state.id = null; document.getElementById('listView').classList.remove('hidden'); document.getElementById('detailView').classList.add('hidden'); document.getElementById('backBtn').classList.add('hidden'); window.updateLangUI(); };
-        window.goToToday = () => { window.state.date = new Date(); document.getElementById('inDate').value = new Date().toISOString().slice(0, 10); window.renderDetail(); };
-        window.changeMonth = (d) => { window.state.date.setMonth(window.state.date.getMonth() + d); window.renderDetail(); };
-        window.togglePrivacy = () => { window.state.privacy = !window.state.privacy; document.getElementById('privacyIcon').style.color = window.state.privacy ? '#ec4899' : 'currentColor'; window.renderDetail(); };
-        
-        window.confirmDelWorker = (id) => { triggerPopup('delete', () => { employees = employees.filter(e => e.id !== id); window.saveDB(); window.renderList(); }); };
-        window.confirmDelRec = (id) => { triggerPopup('delete', () => { const emp = employees.find(e => e.id === window.state.id); emp.records = emp.records.filter(x => x.id !== id); window.saveDB(); window.renderDetail(); }); };
-        
-        window.openAddWorkerModal = () => window.showInput("👤 Add Employee", [{ id: 'wN', label: "Name", type: 'text', value: '' }], (v) => { if(v.wN) { employees.push({ id: Date.now(), name: v.wN, records: [], advances: [], offDay: 0, limitIn: "" }); window.saveDB(); window.renderList(); } });
-        window.openRenameModal = (id) => { const emp = employees.find(e => e.id === id); window.showInput("Rename", [{ id: 'wN', label: "New Name", type: 'text', value: emp.name }], (v) => { if(v.wN) { emp.name = v.wN; window.saveDB(); window.renderList(); } }); };
-        window.editRec = (id) => { 
-            const emp = employees.find(e => e.id === window.state.id); const r = emp.records.find(x => x.id === id); 
-            document.getElementById('inDate').value = r.date; document.getElementById('inIn').value = r.in === '-' ? '' : r.in; 
-            document.getElementById('inOut').value = r.out === '-' ? '' : r.out; document.getElementById('inTask').value = r.task; 
-            window.state.editId = id; document.getElementById('btnAdd').textContent = trans[window.state.lang].up; window.scrollTo({ top: 0, behavior: 'smooth' }); 
+        window.goBack = () => { 
+            window.state.id = null; 
+            document.getElementById('listView').classList.remove('hidden'); 
+            document.getElementById('detailView').classList.add('hidden'); 
+            document.getElementById('backBtn').classList.add('hidden'); 
+            window.updateLangUI(); 
         };
-        window.exportCSV = () => { const emp = employees.find(e => e.id === window.state.id); let csv = "Date,In,Out,Hours,Earn,Note\n"; emp.records.forEach(r => csv += `${r.date},${r.in},${r.out},${r.rounded},${r.rounded*40},${r.task}\n`); const blob = new Blob([csv], { type: 'text/csv' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `${emp.name}_Report.csv`; a.click(); };
+        window.goToToday = () => { 
+            window.state.date = new Date(); 
+            document.getElementById('inDate').value = new Date().toISOString().slice(0, 10); 
+            window.renderDetail(); 
+        };
+        window.changeMonth = (d) => { window.state.date.setMonth(window.state.date.getMonth() + d); window.renderDetail(); };
+        window.togglePrivacy = () => { 
+            window.state.privacy = !window.state.privacy; 
+            document.getElementById('privacyIcon').style.color = window.state.privacy ? '#ec4899' : 'currentColor'; 
+            window.renderDetail(); 
+        };
+        
+        window.confirmDelWorker = (id) => { 
+            triggerPopup('delete', () => { 
+                employees = employees.filter(e => e.id !== id); 
+                window.saveDB(); 
+                window.renderList(); 
+            }); 
+        };
+        window.confirmDelRec = (id) => { 
+            triggerPopup('delete', () => { 
+                const emp = employees.find(e => e.id === window.state.id); 
+                emp.records = emp.records.filter(x => x.id !== id); 
+                window.saveDB(); 
+                window.renderDetail(); 
+            }); 
+        };
+        
+        window.openAddWorkerModal = () => window.showInput("👤 Add Employee", [
+            { id: 'wN', label: "Name", type: 'text', value: '' }
+        ], (v) => { 
+            if(v.wN) { 
+                employees.push({ id: Date.now(), name: v.wN, records: [], advances: [], offDay: 0, limitIn: "" }); 
+                window.saveDB(); 
+                window.renderList(); 
+            } 
+        });
+
+        window.openRenameModal = (id) => { 
+            const emp = employees.find(e => e.id === id); 
+            window.showInput("Rename", [{ id: 'wN', label: "New Name", type: 'text', value: emp.name }], (v) => { 
+                if(v.wN) { emp.name = v.wN; window.saveDB(); window.renderList(); } 
+            }); 
+        };
+
+        window.editRec = (id) => { 
+            const emp = employees.find(e => e.id === window.state.id); 
+            const r = emp.records.find(x => x.id === id); 
+            document.getElementById('inDate').value = r.date; 
+            document.getElementById('inIn').value = r.in === '-' ? '' : r.in; 
+            document.getElementById('inOut').value = r.out === '-' ? '' : r.out; 
+            document.getElementById('inTask').value = r.task; 
+            window.state.editId = id; 
+            document.getElementById('btnAdd').textContent = trans[window.state.lang].up; 
+            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+        };
+
+        window.exportCSV = () => { 
+            const emp = employees.find(e => e.id === window.state.id); 
+            let csv = "Date,In,Out,Hours,Earn,Note\n"; 
+            emp.records.forEach(r => csv += `${r.date},${r.in},${r.out},${r.rounded},${r.rounded*40},${r.task}\n`); 
+            const blob = new Blob([csv], { type: 'text/csv' }); 
+            const a = document.createElement('a'); 
+            a.href = URL.createObjectURL(blob); 
+            a.download = `${emp.name}_Report.csv`; 
+            a.click(); 
+        };
 
         // ADMIN APPROVE
         async function approveUser() {
@@ -553,10 +882,14 @@
             const days = parseInt(document.getElementById('sub-days').value);
             const expiry = Date.now() + (days * 24 * 60 * 60 * 1000);
             await db.collection('subscriptions').doc(email).set({ expiry, approved: true });
-            alert("Approved!");
+            alert("✅ Approved! " + email + " now has " + days + " days access.");
         }
 
-        window.onload = () => { document.getElementById('inDate').value = new Date().toISOString().slice(0, 10); window.updateLangUI(); window.renderList(); };
+        window.onload = () => { 
+            document.getElementById('inDate').value = new Date().toISOString().slice(0, 10); 
+            window.updateLangUI(); 
+            window.renderList(); 
+        };
     </script>
 </body>
 </html>
