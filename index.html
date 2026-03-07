@@ -36,8 +36,75 @@
         .row-late { background: rgba(251, 191, 36, 0.15) !important; border-left: 4px solid #fbbf24 !important; }
         .btn-neon { background-color: #80ffaa; color: black; font-weight: 900; border-radius: 1.25rem; padding: 1rem; width: 100%; transition: all 0.2s ease; box-shadow: 0 0 20px rgba(128, 255, 170, 0.2); }
         .modal-blur { backdrop-filter: blur(12px); background: rgba(0,0,0,0.8); }
-        @media print { .print-hidden { display: none !important; } #printHeader { display: block !important; } }
+        /* ===== A4 PRINT STYLES ===== */
         #printHeader { display: none; }
+        @media print {
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            html, body { margin: 0 !important; padding: 0 !important; background: #fff !important; color: #000 !important; font-family: 'Plus Jakarta Sans', Arial, sans-serif !important; font-size: 8pt !important; }
+            .print-hidden { display: none !important; }
+            #auth-page, #admin-panel, #admin-inspect-section, header, #payment-ui, #listView { display: none !important; }
+            #app-content { display: block !important; }
+            #locked-features { opacity: 1 !important; pointer-events: auto !important; filter: none !important; }
+            main { padding: 0 !important; margin: 0 !important; max-width: 100% !important; }
+            #detailView { display: block !important; }
+            #printHeader { display: block !important; }
+
+            /* Force A4 single page */
+            @page { size: A4 portrait; margin: 8mm 8mm 8mm 8mm; }
+
+            /* Print header */
+            #printHeader {
+                text-align: center;
+                border-bottom: 2.5px solid #000;
+                padding-bottom: 6px;
+                margin-bottom: 8px;
+            }
+            #printHeader .ph-title { font-size: 15pt; font-weight: 900; letter-spacing: -0.03em; text-transform: uppercase; }
+            #printHeader .ph-sub { font-size: 7pt; font-weight: 700; opacity: 0.5; text-transform: uppercase; letter-spacing: 0.1em; }
+            #printHeader .ph-meta { font-size: 7pt; margin-top: 2px; }
+            #printHeader .ph-stats { display: flex; justify-content: center; gap: 20px; margin-top: 6px; }
+            #printHeader .ph-stat { text-align: center; }
+            #printHeader .ph-stat-val { font-size: 13pt; font-weight: 900; line-height: 1; }
+            #printHeader .ph-stat-lbl { font-size: 6pt; font-weight: 700; text-transform: uppercase; opacity: 0.5; }
+            #printHeader .ph-stat.highlight .ph-stat-val { font-size: 16pt; }
+            #printHeader .ph-divider { width: 1px; background: #ccc; margin: 0 4px; }
+
+            /* Hide screen stats/form elements */
+            .lg\:col-span-8, .lg\:col-span-4, #detailView > .space-y-8 > div:not(:last-child):not(#print-stats-bar) { display: none !important; }
+
+            /* Print stats bar */
+            #print-stats-bar {
+                display: flex !important;
+                border: 1.5px solid #000;
+                border-radius: 6px;
+                overflow: hidden;
+                margin-bottom: 6px;
+            }
+            #print-stats-bar .ps-item {
+                flex: 1;
+                text-align: center;
+                padding: 5px 4px;
+                border-right: 1px solid #ccc;
+            }
+            #print-stats-bar .ps-item:last-child { border-right: none; }
+            #print-stats-bar .ps-val { font-size: 12pt; font-weight: 900; line-height: 1.1; }
+            #print-stats-bar .ps-lbl { font-size: 5.5pt; font-weight: 700; text-transform: uppercase; opacity: 0.45; }
+            #print-stats-bar .ps-salary { background: #000; color: #fff; }
+            #print-stats-bar .ps-salary .ps-lbl { color: #fff; opacity: 0.7; }
+
+            /* Print table */
+            .rounded-3xl.card-ui { border-radius: 6px !important; border: 1.5px solid #000 !important; background: #fff !important; overflow: hidden !important; }
+            table { width: 100% !important; border-collapse: collapse !important; font-size: 7pt !important; }
+            thead tr { background: #000 !important; color: #fff !important; }
+            thead th { padding: 5px 6px !important; font-size: 6.5pt !important; font-weight: 900 !important; text-transform: uppercase !important; letter-spacing: 0.05em; color: #fff !important; }
+            tbody tr { border-bottom: 1px solid #e5e5e5 !important; background: #fff !important; color: #000 !important; }
+            tbody tr.row-late { background: #f5f5f5 !important; border-left: 3px solid #000 !important; }
+            tbody tr.bg-emerald-500\/10 { background: #f0f0f0 !important; font-style: italic; }
+            tbody tr.bg-red-500\/10 { background: #f9f9f9 !important; font-style: italic; }
+            tbody td { padding: 4px 6px !important; color: #000 !important; }
+            /* Hide action column in print */
+            thead th:last-child, tbody td:last-child { display: none !important; }
+        }
         /* Language picker buttons for PC */
         .lang-btn-group { display: flex; gap: 8px; }
         .lang-option-btn { display: flex; align-items: center; gap: 6px; padding: 8px 14px; border: 1px solid #2d2d30; border-radius: 12px; background: #151518; color: #fff; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
@@ -52,6 +119,11 @@
         .countdown-badge.danger { background: rgba(255,49,49,0.1); border-color: rgba(255,49,49,0.3); color: #ff3131; }
         /* Admin inspect panel */
         .inspect-panel { background: rgba(6,199,85,0.05); border: 1px solid rgba(6,199,85,0.2); border-radius: 1.5rem; padding: 1.5rem; margin-bottom: 1rem; }
+        /* Fix time input appearance */
+        input[type="time"]::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.4; cursor: pointer; }
+        input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.4; cursor: pointer; }
+        input[type="time"] { color-scheme: dark; }
+        input[type="date"] { color-scheme: dark; }
     </style>
 </head>
 <body class="min-h-screen">
@@ -184,23 +256,64 @@
         </div>
 
         <main class="max-w-6xl mx-auto p-6">
-            <div id="payment-ui" class="space-y-8 mb-12">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                    <div class="pricing-card"><span>1 Month</span><h3 class="text-2xl font-black mt-1">1,499 ฿</h3></div>
-                    <div class="pricing-card active"><span>3 Months</span><h3 class="text-2xl font-black mt-1">4,399 ฿</h3></div>
-                    <div class="pricing-card"><span>6 Months</span><h3 class="text-2xl font-black mt-1">7,999 ฿</h3></div>
+            <div id="payment-ui" class="mb-12">
+                <!-- Pricing Plans -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+                    <div class="pricing-card group cursor-pointer hover:border-zinc-600 transition-all">
+                        <p class="text-[9px] font-black uppercase tracking-widest text-zinc-500 mb-2">STARTER</p>
+                        <p class="text-xs font-bold text-zinc-400 mb-1">1 Month</p>
+                        <h3 class="text-3xl font-black tracking-tighter">1,499<span class="text-base font-bold text-zinc-400 ml-1">฿</span></h3>
+                    </div>
+                    <div class="pricing-card active relative overflow-hidden">
+                        <div class="absolute top-3 right-3 bg-emerald-500 text-black text-[8px] font-black px-2 py-0.5 rounded-full uppercase">Popular</div>
+                        <p class="text-[9px] font-black uppercase tracking-widest text-emerald-500 mb-2">BEST VALUE</p>
+                        <p class="text-xs font-bold text-zinc-400 mb-1">3 Months</p>
+                        <h3 class="text-3xl font-black tracking-tighter">4,399<span class="text-base font-bold text-zinc-400 ml-1">฿</span></h3>
+                    </div>
+                    <div class="pricing-card group cursor-pointer hover:border-zinc-600 transition-all">
+                        <p class="text-[9px] font-black uppercase tracking-widest text-zinc-500 mb-2">PRO</p>
+                        <p class="text-xs font-bold text-zinc-400 mb-1">6 Months</p>
+                        <h3 class="text-3xl font-black tracking-tighter">7,999<span class="text-base font-bold text-zinc-400 ml-1">฿</span></h3>
+                    </div>
                 </div>
-                <div class="card-ui p-10 bg-zinc-900/20 text-center border-dashed border-zinc-700">
-                    <p class="text-xs opacity-40 uppercase font-bold mb-2">Transfer to Krungthai Bank</p>
-                    <p class="text-3xl font-black text-emerald-500">3610476982</p>
-                    <p class="text-sm font-bold opacity-70 mb-6 text-white">Account Name: ปิเพียวอ่าว</p>
-                    <!-- ✅ UPDATE 5: LINE button -->
-                    <div class="max-w-xs mx-auto">
-                        <p class="text-xs opacity-40 uppercase font-bold mb-3">Contact via LINE</p>
-                        <button onclick="window.open('https://line.me/ti/p/thevann3.0', '_blank')" class="line-btn">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.07 9.436-6.971C23.176 14.393 24 12.458 24 10.314"/></svg>
-                            LINE: thevann3.0
-                        </button>
+
+                <!-- Payment Info Card - Pro Design -->
+                <div style="background:#0a0a0a; border:1px solid #222; border-radius:1.5rem; overflow:hidden;">
+                    <div class="grid grid-cols-1 md:grid-cols-2">
+                        <!-- Left: Bank Transfer -->
+                        <div style="padding:2rem; border-right:1px solid #222;">
+                            <div class="flex items-center gap-2 mb-4">
+                                <div style="width:8px;height:8px;border-radius:999px;background:#80ffaa;box-shadow:0 0 8px #80ffaa;"></div>
+                                <p class="text-[9px] font-black uppercase tracking-widest" style="color:#80ffaa;">Bank Transfer</p>
+                            </div>
+                            <div class="mb-3">
+                                <p class="text-[8px] font-bold uppercase text-zinc-600 mb-1">Bank</p>
+                                <p class="text-sm font-black text-white">Krungthai Bank</p>
+                            </div>
+                            <div class="mb-3">
+                                <p class="text-[8px] font-bold uppercase text-zinc-600 mb-1">Account Number</p>
+                                <div class="flex items-center gap-3">
+                                    <p class="text-2xl font-black tracking-widest" style="color:#80ffaa; letter-spacing:0.08em;">361-0-47698-2</p>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-[8px] font-bold uppercase text-zinc-600 mb-1">Account Holder</p>
+                                <p class="text-sm font-black text-white">ปิเพียวอ่าว</p>
+                            </div>
+                        </div>
+                        <!-- Right: Contact -->
+                        <div style="padding:2rem; background:rgba(6,199,85,0.03);">
+                            <div class="flex items-center gap-2 mb-4">
+                                <div style="width:8px;height:8px;border-radius:999px;background:#06C755;box-shadow:0 0 8px #06C755;"></div>
+                                <p class="text-[9px] font-black uppercase tracking-widest" style="color:#06C755;">Contact & Confirm</p>
+                            </div>
+                            <p class="text-xs text-zinc-500 font-medium mb-4 leading-relaxed">After transfer, send your slip via LINE to activate access instantly.</p>
+                            <button onclick="window.open('https://line.me/ti/p/thevann3.0', '_blank')" class="line-btn mb-3">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.07 9.436-6.971C23.176 14.393 24 12.458 24 10.314"/></svg>
+                                LINE: thevann3.0
+                            </button>
+                            <p class="text-[8px] text-zinc-600 text-center font-medium">Response within 24 hours</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -215,6 +328,55 @@
                 </div>
 
                 <div id="detailView" class="hidden space-y-8">
+
+                    <!-- PRINT HEADER - only shows during print -->
+                    <div id="printHeader">
+                        <div class="ph-title">I Laundry Service By Fon</div>
+                        <div class="ph-sub" id="ph-sub-text">Monthly Attendance Report</div>
+                        <div class="ph-meta">
+                            <span id="ph-name"></span> &nbsp;|&nbsp; <span id="ph-month"></span>
+                        </div>
+                    </div>
+
+                    <!-- PRINT STATS BAR - only shows during print -->
+                    <div id="print-stats-bar" style="display:none;">
+                        <div class="ps-item">
+                            <div class="ps-val" id="ps-days">0</div>
+                            <div class="ps-lbl" id="ps-lbl-days">Month Days</div>
+                        </div>
+                        <div class="ps-item">
+                            <div class="ps-val" id="ps-worked">0</div>
+                            <div class="ps-lbl" id="ps-lbl-worked">Worked</div>
+                        </div>
+                        <div class="ps-item">
+                            <div class="ps-val" id="ps-hrs">0</div>
+                            <div class="ps-lbl" id="ps-lbl-hrs">Hours</div>
+                        </div>
+                        <div class="ps-item">
+                            <div class="ps-val" id="ps-late">0</div>
+                            <div class="ps-lbl" id="ps-lbl-late">Late</div>
+                        </div>
+                        <div class="ps-item">
+                            <div class="ps-val" id="ps-off">0</div>
+                            <div class="ps-lbl" id="ps-lbl-off">Day Off</div>
+                        </div>
+                        <div class="ps-item">
+                            <div class="ps-val" id="ps-plunpl">0/0</div>
+                            <div class="ps-lbl" id="ps-lbl-plunpl">PL/UNPL</div>
+                        </div>
+                        <div class="ps-item ps-salary">
+                            <div class="ps-val" id="ps-gross">0</div>
+                            <div class="ps-lbl" id="ps-lbl-gross">Gross</div>
+                        </div>
+                        <div class="ps-item ps-salary">
+                            <div class="ps-val" id="ps-adv">0</div>
+                            <div class="ps-lbl" id="ps-lbl-adv">Advance</div>
+                        </div>
+                        <div class="ps-item ps-salary">
+                            <div class="ps-val" id="ps-net">0</div>
+                            <div class="ps-lbl" id="ps-lbl-net">Net</div>
+                        </div>
+                    </div>
                      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                         <div class="lg:col-span-8 space-y-6">
                             <div class="flex items-center justify-between p-6 card-ui dark:bg-zinc-900/50">
@@ -238,7 +400,7 @@
                                     <button onclick="window.changeMonth(1)" class="p-3 hover:text-emerald-500 transition text-white"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m9 18 6-6-6-6"/></svg></button>
                                 </div>
                                 <button id="btnToday" onclick="window.goToToday()" class="px-6 py-4 rounded-3xl bg-zinc-900 font-black text-[10px] uppercase hover:bg-emerald-500 transition text-white"></button>
-                                <button onclick="window.openOffDaySelector()" class="p-4 rounded-3xl card-ui text-[10px] font-bold text-emerald-500 bg-zinc-900 shadow-sm uppercase flex items-center gap-1">📅 <span id="lblOffDay"></span>: <span id="valOffDayName" class="font-black"></span></button>
+                                <button onclick="window.openOffDaySelector()" class="p-4 rounded-3xl card-ui text-[10px] font-bold text-emerald-500 bg-zinc-900 shadow-sm uppercase flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> <span id="lblOffDay"></span>: <span id="valOffDayName" class="font-black"></span></button>
                                 <div class="flex items-center gap-2 p-2 px-4 rounded-3xl card-ui bg-zinc-900 border border-zinc-800">
                                     <span id="lblEntry" class="text-[9px] font-black opacity-60 uppercase"></span>
                                     <input type="time" id="setInTime" onchange="window.updateEntryTime()" class="bg-transparent border-none p-0 text-xs font-black text-amber-500 w-20 outline-none">
@@ -271,8 +433,8 @@
                     <div class="p-8 rounded-3xl card-ui print-hidden bg-zinc-900/30 border border-zinc-800">
                         <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
                             <div class="md:col-span-2 flex flex-col gap-2"><label id="formDate" class="text-[9px] font-bold opacity-60 uppercase"></label><input type="date" id="inDate" class="w-full bg-black border border-zinc-800 rounded-xl p-3 text-white"></div>
-                            <div class="md:col-span-2 flex flex-col gap-2"><label id="formIn" class="text-[9px] font-bold opacity-60 uppercase"></label><input type="time" id="inIn" class="w-full bg-black border border-zinc-800 rounded-xl p-3 text-white"></div>
-                            <div class="md:col-span-2 flex flex-col gap-2"><label id="formOut" class="text-[9px] font-bold opacity-60 uppercase"></label><input type="time" id="inOut" class="w-full bg-black border border-zinc-800 rounded-xl p-3 text-white"></div>
+                            <div class="md:col-span-2 flex flex-col gap-2"><label id="formIn" class="text-[9px] font-bold opacity-60 uppercase"></label><input type="time" id="inIn" class="w-full bg-black border border-zinc-800 rounded-xl p-3 text-white" placeholder="00:00"></div>
+                            <div class="md:col-span-2 flex flex-col gap-2"><label id="formOut" class="text-[9px] font-bold opacity-60 uppercase"></label><input type="time" id="inOut" class="w-full bg-black border border-zinc-800 rounded-xl p-3 text-white" placeholder="00:00"></div>
                             <div class="md:col-span-3 flex flex-col gap-2"><label id="formNote" class="text-[9px] font-bold opacity-60 uppercase"></label><input type="text" id="inTask" class="w-full bg-black border border-zinc-800 rounded-xl p-3 text-white" placeholder="..."></div>
                             <div class="md:col-span-3 flex gap-2">
                                 <button id="btnAdd" onclick="window.saveRecord(false)" class="flex-1 py-3 bg-emerald-500 text-black font-black rounded-2xl text-[10px] uppercase transition shadow-md"></button>
@@ -468,9 +630,9 @@
         window.state = { id: null, lang: 'en', date: new Date(), isSubscribed: false, privacy: false, editId: null };
 
         const trans = {
-            en: { flag: "🇺🇸 EN", sub: "Time Tracker System", addE: "👤 Add Employee", today: "📍 Today", offD: "OFF DAY", worked: "💼 Worked", hrs: "🕒 Hours", plOff: "PL OFF", unOff: "UNPL OFF", net: "💵 Net Salary", gross: "Gross", adv: "Advance", addAdv: "💸 Add Advance", date: "Date", in: "In", out: "Out", note: "Note", add: "➕ Add", up: "Update", dayOff: "🏠 Day Off", thDate: "Date", thInOut: "In/Out", thDur: "Dur", thRound: "Round", thEarn: "Earn", thNote: "Note", thAction: "Action", mDays: "🗓️ Month Days", offT: "🏠 Total Off", late: "Late Days", entry: "Entry", plun: "PL / UNPL" },
-            mm: { flag: "🇲🇲 MM", sub: "အချိန်မှတ်စနစ်", addE: "👤 လူသစ်ထည့်ရန်", today: "📍 ဒီနေ့", offD: "နားရက်", worked: "💼 အလုပ်ရက်", hrs: "🕒 နာရီပေါင်း", plOff: "သတ်မှတ်နားရက်", unOff: "အပိုနားရက်", net: "💵 လက်ကျန်လစာ", gross: "စုစုပေါင်းလစာ", adv: "ကြိုထုတ်ငွေ", addAdv: "💸 ကြိုထုတ်ငွေထည့်ရန်", date: "နေ့စွဲ", in: "အဝင်", out: "အထွက်", note: "မှတ်ချက်", add: "ထည့်မည်", up: "ပြင်မည်", dayOff: "🏠 နားရက်", thDate: "နေ့စွဲ", thInOut: "အဝင်/အထွက်", thDur: "ကြာချိန်", thRound: "စုစုပေါင်း", thEarn: "ရရှိငွေ", thNote: "မှတ်ချက်", thAction: "လုပ်ဆောင်ချက်", mDays: "🗓️ လအတွင်းရက်", offT: "🏠 စုစုပေါင်းနားရက်", late: "နောက်ကျသည့်ရက်", entry: "ဝင်ချိန်", plun: "သတ်မှတ်/အပို" },
-            th: { flag: "🇹🇭 TH", sub: "ระบบติดตามเวลา", addE: "👤 เพิ่มพนักงาน", today: "📍 วันนี้", offD: "วันหยุด", worked: "💼 ทำงาน", hrs: "🕒 ชั่วโมง", plOff: "ใช่วันหยุด", unOff: "ไม่ใช่วันหยุด", net: "💵 รายได้สุทธิ", gross: "รายได้รวม", adv: "เงินเบิก", addAdv: "💸 เพิ่มเงินเบิก", date: "วันที่", in: "เข้า", out: "ออก", note: "บันทึก", add: "➕ เพิ่ม", up: "แก้ไข", dayOff: "🏠 วันหยุด", thDate: "วันที่", thInOut: "เข้า/ออก", thDur: "เวลา", thRound: "ปัดเศษ", thEarn: "รายได้", thNote: "บันทึก", thAction: "จัดการ", mDays: "🗓️ วันในเดือน", offT: "🏠 วันหยุดรวม", late: "มาสาย", entry: "เวลาเข้างาน", plun: "ใช่หยุด/ไม่ใช่" }
+            en: { flag: "🇺🇸 EN", sub: "Time Tracker System", addE: "Add Employee", today: "Today", offD: "OFF DAY", worked: "Worked", hrs: "Hours", plOff: "PL OFF", unOff: "UNPL OFF", net: "Net Salary", gross: "Gross", adv: "Advance", addAdv: "Add Advance", date: "Date", in: "In", out: "Out", note: "Note", add: "Add", up: "Update", dayOff: "Day Off", thDate: "Date", thInOut: "In / Out", thDur: "Duration", thRound: "Hours", thEarn: "Earn", thNote: "Note", thAction: "Action", mDays: "Month Days", offT: "Total Off", late: "Late Days", entry: "Entry Time", plun: "PL / UNPL" },
+            mm: { flag: "🇲🇲 MM", sub: "အချိန်မှတ်စနစ်", addE: "လူသစ်ထည့်ရန်", today: "ဒီနေ့", offD: "နားရက်", worked: "အလုပ်ရက်", hrs: "နာရီပေါင်း", plOff: "သတ်မှတ်နားရက်", unOff: "အပိုနားရက်", net: "လက်ကျန်လစာ", gross: "စုစုပေါင်းလစာ", adv: "ကြိုထုတ်ငွေ", addAdv: "ကြိုထုတ်ငွေထည့်ရန်", date: "နေ့စွဲ", in: "အဝင်", out: "အထွက်", note: "မှတ်ချက်", add: "ထည့်မည်", up: "ပြင်မည်", dayOff: "နားရက်", thDate: "နေ့စွဲ", thInOut: "အဝင် / အထွက်", thDur: "ကြာချိန်", thRound: "နာရီ", thEarn: "ရရှိငွေ", thNote: "မှတ်ချက်", thAction: "လုပ်ဆောင်ချက်", mDays: "လအတွင်းရက်", offT: "စုစုပေါင်းနားရက်", late: "နောက်ကျသည့်ရက်", entry: "ဝင်ချိန်", plun: "သတ်မှတ် / အပို" },
+            th: { flag: "🇹🇭 TH", sub: "ระบบติดตามเวลา", addE: "เพิ่มพนักงาน", today: "วันนี้", offD: "วันหยุด", worked: "ทำงาน", hrs: "ชั่วโมง", plOff: "ใช่วันหยุด", unOff: "ไม่ใช่วันหยุด", net: "รายได้สุทธิ", gross: "รายได้รวม", adv: "เงินเบิก", addAdv: "เพิ่มเงินเบิก", date: "วันที่", in: "เข้า", out: "ออก", note: "บันทึก", add: "เพิ่ม", up: "แก้ไข", dayOff: "วันหยุด", thDate: "วันที่", thInOut: "เข้า / ออก", thDur: "เวลา", thRound: "ชั่วโมง", thEarn: "รายได้", thNote: "บันทึก", thAction: "จัดการ", mDays: "วันในเดือน", offT: "วันหยุดรวม", late: "มาสาย", entry: "เวลาเข้างาน", plun: "ใช่ / ไม่ใช่" }
         };
 
         // ✅ UPDATE 1 + 2: Auth state with Cloud Sync & Admin Inspect
@@ -638,26 +800,53 @@
             const emp = employees.find(e => e.id === window.state.id); 
             const l = trans[window.state.lang];
             const mStr = window.state.date.toISOString().slice(0, 7);
-            document.getElementById('monthLabel').textContent = window.state.date.toLocaleString(window.state.lang, { month: 'long', year: 'numeric' });
+            const monthLabel = window.state.date.toLocaleString(window.state.lang, { month: 'long', year: 'numeric' });
+            document.getElementById('monthLabel').textContent = monthLabel;
             const records = emp.records.filter(r => r.date.startsWith(mStr)).sort((a,b) => new Date(b.date) - new Date(a.date));
             const tHrs = records.reduce((s, r) => s + (r.rounded || 0), 0);
             const tAdv = (emp.advances || []).filter(a => a.date.startsWith(mStr)).reduce((s, a) => s + a.amount, 0);
             const plOff = records.filter(r => r.isDayOff && new Date(r.date).getDay() == (emp.offDay || 0)).length;
             const unplOff = records.filter(r => r.isDayOff && new Date(r.date).getDay() != (emp.offDay || 0)).length;
             const lateCount = records.filter(r => !r.isDayOff && emp.limitIn && r.in > emp.limitIn).length;
+            const grossVal = tHrs * 40;
+            const netVal = grossVal - tAdv;
+            const workedDays = records.filter(r => !r.isDayOff).length;
+            const monthDays = new Date(window.state.date.getFullYear(), window.state.date.getMonth() + 1, 0).getDate();
 
             document.getElementById('profileName').textContent = emp.name;
             document.getElementById('profileInitial').textContent = emp.name.charAt(0).toUpperCase();
-            document.getElementById('statMonthDays').textContent = new Date(window.state.date.getFullYear(), window.state.date.getMonth() + 1, 0).getDate();
-            document.getElementById('statWorked').textContent = records.filter(r => !r.isDayOff).length;
+            document.getElementById('statMonthDays').textContent = monthDays;
+            document.getElementById('statWorked').textContent = workedDays;
             document.getElementById('statHrs').textContent = tHrs.toFixed(2);
             document.getElementById('statPlUnpl').textContent = `${plOff} / ${unplOff}`;
             document.getElementById('statOffTotal').textContent = plOff + unplOff;
             document.getElementById('statLate').textContent = lateCount;
             document.getElementById('valOffDayName').textContent = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][emp.offDay || 0];
-            document.getElementById('valGross').textContent = window.fmtNum(tHrs * 40) + ' ฿';
+            document.getElementById('valGross').textContent = window.fmtNum(grossVal) + ' ฿';
             document.getElementById('valAdvance').textContent = window.fmtNum(tAdv) + ' ฿';
-            document.getElementById('valNet').textContent = window.fmtNum((tHrs * 40) - tAdv);
+            document.getElementById('valNet').textContent = window.fmtNum(netVal);
+
+            // ✅ Update print header & stats bar (language-aware)
+            const phSubMap = { en: 'Monthly Attendance Report', mm: 'လစဉ်တက်ရောက်မှုမှတ်တမ်း', th: 'รายงานการเข้างานรายเดือน' };
+            if(document.getElementById('ph-name')) document.getElementById('ph-name').textContent = emp.name;
+            if(document.getElementById('ph-month')) document.getElementById('ph-month').textContent = monthLabel;
+            if(document.getElementById('ph-sub-text')) document.getElementById('ph-sub-text').textContent = phSubMap[window.state.lang] || phSubMap.en;
+            // Print stats
+            const psMap = {
+                en: { days:'Month Days', worked:'Worked', hrs:'Hours', late:'Late', off:'Day Off', plunpl:'PL/UNPL', gross:'Gross', adv:'Advance', net:'Net Salary' },
+                mm: { days:'လအတွင်းရက်', worked:'အလုပ်ရက်', hrs:'နာရီ', late:'နောက်ကျ', off:'နားရက်', plunpl:'သတ်/အပို', gross:'စုစုပေါင်း', adv:'ကြိုထုတ်', net:'လက်ကျန်' },
+                th: { days:'วันในเดือน', worked:'ทำงาน', hrs:'ชั่วโมง', late:'มาสาย', off:'วันหยุด', plunpl:'ใช่/ไม่ใช่', gross:'รายได้รวม', adv:'เงินเบิก', net:'รายได้สุทธิ' }
+            };
+            const psL = psMap[window.state.lang] || psMap.en;
+            const psIds = ['ps-days','ps-worked','ps-hrs','ps-late','ps-off','ps-plunpl','ps-gross','ps-adv','ps-net'];
+            const psVals = [monthDays, workedDays, tHrs.toFixed(1), lateCount, plOff+unplOff, `${plOff}/${unplOff}`, grossVal.toLocaleString(), tAdv.toLocaleString(), netVal.toLocaleString()];
+            const psLbls = ['days','worked','hrs','late','off','plunpl','gross','adv','net'];
+            psIds.forEach((id, i) => {
+                const el = document.getElementById(id); if(el) el.textContent = psVals[i];
+            });
+            psLbls.forEach(k => {
+                const el = document.getElementById('ps-lbl-' + k); if(el) el.textContent = psL[k];
+            });
 
             const body = document.getElementById('recBody'); body.innerHTML = '';
             records.forEach(r => {
@@ -666,10 +855,10 @@
                 const tr = document.createElement('tr'); 
                 tr.className = `${r.isDayOff ? (isPl ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500') : (isLate ? 'row-late' : 'hover:bg-zinc-900/30')} transition-colors`;
                 tr.innerHTML = `<td class="px-6 py-4 font-black text-xs">${r.date}<br><span class="text-[8px] opacity-70 uppercase">${new Date(r.date).toLocaleDateString(window.state.lang, {weekday:'long'})}</span></td>
-                    <td class="px-6 py-4 font-mono text-[10px] ${isLate ? 'text-amber-500 font-bold' : 'opacity-80'}">${r.in} ➔ ${r.out}</td>
+                    <td class="px-6 py-4 font-mono text-[10px] ${isLate ? 'text-amber-500 font-bold' : 'opacity-80'}">${r.in} &rarr; ${r.out}</td>
                     <td class="px-6 py-4 text-xs font-bold">${r.isDayOff ? '-' : r.durStr}</td>
                     <td class="px-6 py-4 font-black text-emerald-500">${r.rounded > 0 ? r.rounded.toFixed(2) : '-'}</td>
-                    <td class="px-6 py-4 font-black text-xs">${r.isDayOff ? (isPl ? l.plOff : l.unOff) : '฿'+(r.rounded*40).toLocaleString()}</td>
+                    <td class="px-6 py-4 font-black text-xs">${r.isDayOff ? (isPl ? l.plOff : l.unOff) : '&#3647;'+(r.rounded*40).toLocaleString()}</td>
                     <td class="px-6 py-4 text-xs opacity-70 italic max-w-[120px] truncate text-white">${r.task || '-'}</td>
                     <td class="px-6 py-4 text-right flex justify-end gap-2 print-hidden">
                         <button onclick="window.editRec(${r.id})" class="p-1 text-zinc-400 hover:text-emerald-500 transition"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></button>
