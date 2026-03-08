@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🧺 I Laundry Service  - Subscription System</title>
+    <title>🧺 I Laundry Service By Fon - Subscription System</title>
     
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -174,7 +174,7 @@
     <div id="loading-screen">
         <div style="text-align:center;">
             <p style="font-size:28px; margin-bottom:8px;">🧺</p>
-            <p style="font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:0.15em; color:#80ffaa; margin-bottom:20px;">I Laundry Service </p>
+            <p style="font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:0.15em; color:#80ffaa; margin-bottom:20px;">I Laundry Service By Fon</p>
             <div class="loader-ring" style="margin:0 auto;"></div>
             <p style="font-size:9px; color:#333; margin-top:16px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em;">Loading...</p>
         </div>
@@ -185,7 +185,7 @@
         <div class="max-w-md w-full space-y-6 p-10 card-ui border border-zinc-900 shadow-2xl text-center">
             
             <div id="login-section" class="space-y-6 text-left">
-                <h1 class="text-3xl font-black tracking-tighter text-center uppercase">I Laundry Service </h1>
+                <h1 class="text-3xl font-black tracking-tighter text-center uppercase">I Laundry Service By Fon</h1>
                 <p class="text-center text-zinc-500 text-sm font-medium">Sign in with your email or Google.</p>
                 <div class="space-y-4">
                     <input type="email" id="auth-email" class="auth-input" placeholder="Email Address">
@@ -221,9 +221,18 @@
                 <div>
                     <label class="text-[9px] font-black opacity-60 uppercase block mb-2">🌐 Select Language</label>
                     <div class="lang-btn-group flex-wrap">
-                        <button onclick="setRegLang('en')" id="langBtn-en" class="lang-option-btn active">🇺🇸 English</button>
-                        <button onclick="setRegLang('mm')" id="langBtn-mm" class="lang-option-btn">🇲🇲 မြန်မာ</button>
-                        <button onclick="setRegLang('th')" id="langBtn-th" class="lang-option-btn">🇹🇭 ภาษาไทย</button>
+                        <button onclick="setRegLang('en')" id="langBtn-en" class="lang-option-btn active">
+                            <svg width="18" height="13" viewBox="0 0 60 40"><rect width="60" height="40" fill="#012169"/><path d="M0,0 L60,40 M60,0 L0,40" stroke="#fff" stroke-width="8"/><path d="M0,0 L60,40 M60,0 L0,40" stroke="#C8102E" stroke-width="5"/><path d="M30,0 V40 M0,20 H60" stroke="#fff" stroke-width="13"/><path d="M30,0 V40 M0,20 H60" stroke="#C8102E" stroke-width="8"/></svg>
+                            English
+                        </button>
+                        <button onclick="setRegLang('mm')" id="langBtn-mm" class="lang-option-btn">
+                            <svg width="18" height="13" viewBox="0 0 30 20"><rect width="30" height="20" fill="#FECB00"/><rect y="6.67" width="30" height="6.67" fill="#34B233"/><rect y="13.33" width="30" height="6.67" fill="#EA2839"/><polygon points="15,2 17.5,9 24,9 19,13 21,20 15,16 9,20 11,13 6,9 12.5,9" fill="white"/></svg>
+                            မြန်မာ
+                        </button>
+                        <button onclick="setRegLang('th')" id="langBtn-th" class="lang-option-btn">
+                            <svg width="18" height="13" viewBox="0 0 30 20"><rect width="30" height="20" fill="#A51931"/><rect y="3.33" width="30" height="13.34" fill="#F4F5F8"/><rect y="6.67" width="30" height="6.67" fill="#2D2A4A"/></svg>
+                            ภาษาไทย
+                        </button>
                     </div>
                 </div>
 
@@ -305,7 +314,7 @@
                 <div class="flex items-center gap-4">
                     <button id="backBtn" onclick="window.goBack()" class="hidden p-2 rounded-xl bg-zinc-900 transition"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m15 18-6-6 6-6"/></svg></button>
                     <div>
-                        <h1 class="text-lg font-black tracking-tight uppercase">🧺 I Laundry Service </h1>
+                        <h1 class="text-lg font-black tracking-tight uppercase">🧺 I Laundry Service</h1>
                         <!-- ✅ UPDATE 4: 30-Day Countdown shown here -->
                         <div class="flex items-center gap-2 mt-0.5">
                             <p id="expiry-status" class="text-[9px] font-black uppercase text-red-500">Access Locked</p>
@@ -417,7 +426,7 @@
 
                     <!-- PRINT HEADER - only shows during print -->
                     <div id="printHeader">
-                        <div class="ph-title">I Laundry Service </div>
+                        <div class="ph-title">I Laundry Service</div>
                         <div class="ph-sub" id="ph-sub-text">Monthly Attendance Report</div>
                         <div class="ph-meta">
                             <span id="ph-name"></span> &nbsp;|&nbsp; <span id="ph-month"></span>
@@ -440,6 +449,9 @@
                             <span class="psp-net" id="psp-net2">0 ฿</span>
                         </div>
                     </div>
+
+                    <!-- PRINT STATS BAR - only shows during print -->
+                    <div id="print-stats-bar" style="display:none;">
                         <div class="ps-item">
                             <div class="ps-val" id="ps-days">0</div>
                             <div class="ps-lbl" id="ps-lbl-days">Month Days</div>
@@ -577,7 +589,7 @@
         <footer class="border-t border-zinc-900 mt-16 py-6 print-hidden">
             <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
                 <div class="flex items-center gap-2">
-                    <span class="text-zinc-700 text-[10px] font-black uppercase tracking-widest">🧺 I Laundry Service </span>
+                    <span class="text-zinc-700 text-[10px] font-black uppercase tracking-widest">🧺 I Laundry Service</span>
                 </div>
                 <p class="text-[9px] text-zinc-700 font-medium text-center">
                     Designed &amp; owned by <span class="text-zinc-500 font-black">Thevann</span> · All rights reserved © 2026
@@ -589,19 +601,84 @@
         </footer>
     </div>
 
-    <!-- POPUP MODAL -->
+    <!-- CUSTOM POPUP MODAL (delete confirm) -->
     <div id="custom-popup" class="fixed inset-0 z-[200] hidden items-center justify-center modal-blur p-4" onclick="closePopup()">
-        <div class="max-w-xs w-full card-ui p-8 text-center space-y-6 border-zinc-800 shadow-2xl" onclick="event.stopPropagation()">
-            <div id="popup-icon-container" class="w-16 h-16 mx-auto rounded-full flex items-center justify-center bg-zinc-900 border border-zinc-800">
-                <span id="popup-icon"></span>
+        <div class="max-w-sm w-full rounded-3xl overflow-hidden shadow-2xl border border-zinc-800" style="background:#0e0e10;" onclick="event.stopPropagation()">
+            <!-- Top icon bar -->
+            <div id="popup-icon-bar" class="flex items-center justify-center py-8 pb-5">
+                <div id="popup-icon-container" class="w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg">
+                    <span id="popup-icon" class="text-3xl"></span>
+                </div>
             </div>
-            <div>
-                <h3 id="popup-title" class="text-xl font-black uppercase tracking-tight"></h3>
-                <p id="popup-desc" class="text-sm text-zinc-500 mt-2 font-medium"></p>
+            <div class="px-8 pb-8 text-center">
+                <h3 id="popup-title" class="text-xl font-black uppercase tracking-tight text-white mb-2"></h3>
+                <p id="popup-desc" class="text-sm text-zinc-500 font-medium leading-relaxed"></p>
+                <div class="grid grid-cols-2 gap-3 mt-6">
+                    <button onclick="closePopup()" class="py-3 rounded-2xl font-black text-[11px] uppercase transition" style="background:#1a1a1d; color:#888; border:1px solid #2d2d30;">Cancel</button>
+                    <button id="popup-confirm-btn" class="py-3 rounded-2xl font-black text-[11px] uppercase transition"></button>
+                </div>
             </div>
-            <div class="grid grid-cols-2 gap-3">
-                <button onclick="closePopup()" class="py-3 bg-zinc-800 text-white font-bold rounded-2xl text-[10px] uppercase">Cancel</button>
-                <button id="popup-confirm-btn" class="py-3 font-black rounded-2xl text-[10px] uppercase"></button>
+        </div>
+    </div>
+
+    <!-- CUSTOM ALERT MODAL (replaces native alert) -->
+    <div id="custom-alert" class="fixed inset-0 z-[300] hidden items-center justify-center modal-blur p-4">
+        <div class="max-w-sm w-full rounded-3xl overflow-hidden shadow-2xl border border-zinc-800 animate-bounce-in" style="background:#0e0e10;">
+            <div class="flex items-center justify-center py-7 pb-4">
+                <div id="alert-icon-box" class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg">
+                    <span id="alert-icon" class="text-2xl">ℹ️</span>
+                </div>
+            </div>
+            <div class="px-8 pb-8 text-center">
+                <h3 id="alert-title" class="text-base font-black uppercase tracking-tight text-white mb-2">Notice</h3>
+                <p id="alert-msg" class="text-sm text-zinc-400 font-medium leading-relaxed"></p>
+                <button onclick="closeCustomAlert()" class="w-full mt-6 py-3 rounded-2xl font-black text-[11px] uppercase transition" style="background:#80ffaa; color:#000;">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOM CONFIRM MODAL (replaces native confirm) -->
+    <div id="custom-confirm" class="fixed inset-0 z-[300] hidden items-center justify-center modal-blur p-4">
+        <div class="max-w-sm w-full rounded-3xl overflow-hidden shadow-2xl border border-zinc-800" style="background:#0e0e10;">
+            <div class="flex items-center justify-center py-7 pb-4">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style="background:rgba(255,49,49,0.15); border:1px solid rgba(255,49,49,0.3);">
+                    <span class="text-2xl">⚠️</span>
+                </div>
+            </div>
+            <div class="px-8 pb-8 text-center">
+                <h3 id="confirm-title" class="text-base font-black uppercase tracking-tight text-white mb-2">Confirm</h3>
+                <p id="confirm-msg" class="text-sm text-zinc-400 font-medium leading-relaxed"></p>
+                <div class="grid grid-cols-2 gap-3 mt-6">
+                    <button onclick="resolveConfirm(false)" class="py-3 rounded-2xl font-black text-[11px] uppercase transition" style="background:#1a1a1d; color:#888; border:1px solid #2d2d30;">Cancel</button>
+                    <button onclick="resolveConfirm(true)" class="py-3 rounded-2xl font-black text-[11px] uppercase transition" style="background:#ff3131; color:#fff;">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOM PROMPT MODAL (replaces native prompt / extend days) -->
+    <div id="custom-prompt" class="fixed inset-0 z-[300] hidden items-center justify-center modal-blur p-4">
+        <div class="max-w-sm w-full rounded-3xl overflow-hidden shadow-2xl border border-zinc-800" style="background:#0e0e10;">
+            <div class="flex items-center justify-center py-7 pb-4">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style="background:rgba(128,255,170,0.1); border:1px solid rgba(128,255,170,0.3);">
+                    <span class="text-2xl">📅</span>
+                </div>
+            </div>
+            <div class="px-8 pb-8 text-center">
+                <h3 id="prompt-title" class="text-base font-black uppercase tracking-tight text-white mb-1">Extend Access</h3>
+                <p id="prompt-msg" class="text-xs text-zinc-500 font-medium mb-5"></p>
+                <input id="prompt-input" type="number" min="1" max="365" placeholder="e.g. 30" class="w-full text-center text-2xl font-black py-4 rounded-2xl outline-none mb-1" style="background:#151518; border:1px solid #2d2d30; color:#80ffaa; letter-spacing:0.05em;">
+                <p class="text-[9px] text-zinc-600 font-bold uppercase mb-5">Number of days</p>
+                <div class="flex gap-2 mb-3">
+                    <button onclick="setPromptDays(30)" class="flex-1 py-2 rounded-xl text-[10px] font-black uppercase transition" style="background:#1a1a1d; color:#80ffaa; border:1px solid #2a2a2d;">30d</button>
+                    <button onclick="setPromptDays(60)" class="flex-1 py-2 rounded-xl text-[10px] font-black uppercase transition" style="background:#1a1a1d; color:#80ffaa; border:1px solid #2a2a2d;">60d</button>
+                    <button onclick="setPromptDays(90)" class="flex-1 py-2 rounded-xl text-[10px] font-black uppercase transition" style="background:#1a1a1d; color:#80ffaa; border:1px solid #2a2a2d;">90d</button>
+                    <button onclick="setPromptDays(180)" class="flex-1 py-2 rounded-xl text-[10px] font-black uppercase transition" style="background:#1a1a1d; color:#80ffaa; border:1px solid #2a2a2d;">180d</button>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="resolvePrompt(false)" class="py-3 rounded-2xl font-black text-[11px] uppercase transition" style="background:#1a1a1d; color:#888; border:1px solid #2d2d30;">Cancel</button>
+                    <button onclick="resolvePrompt(true)" class="py-3 rounded-2xl font-black text-[11px] uppercase transition" style="background:#80ffaa; color:#000;">Extend ✓</button>
+                </div>
             </div>
         </div>
     </div>
@@ -723,7 +800,7 @@
                     const res = await auth.createUserWithEmailAndPassword(e, p);
                     await res.user.updateProfile({ displayName: u });
                     await res.user.sendEmailVerification();
-                    alert("Registration successful! Check email to verify.");
+                    showAlert("Registered! 🎉", "Registration successful! Check your email to verify.", "✅", "success");
                     toggleAuthView('login');
                 } else {
                     const e = document.getElementById('auth-email').value;
@@ -734,13 +811,13 @@
                 if(t === 'login') {
                     errorLabel.classList.remove('hidden');
                     errorLabel.textContent = "Wrong Password or Email!";
-                } else { alert(e.message); }
+                } else { showAlert("Error", e.message, "❌", "error"); }
             }
         }
 
         function loginGoogle() {
             const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).catch(err => alert(err.message));
+            auth.signInWithPopup(provider).catch(err => showAlert("Error", err.message, "❌", "error"));
         }
 
         function logout() { 
@@ -749,32 +826,85 @@
 
         function sendResetEmail() {
             const email = document.getElementById('reset-email').value;
-            if(!email) return alert("Please enter your email.");
+            if(!email) return showAlert("Enter Email", "Please enter your email address.", "⚠️", "warning");
             auth.sendPasswordResetEmail(email)
-                .then(() => { alert("Reset link sent! Check your email."); toggleAuthView('login'); })
-                .catch(e => alert(e.message));
+                .then(() => { showAlert("Email Sent! ✅", "Reset link sent! Check your inbox.", "📧", "success"); toggleAuthView('login'); })
+                .catch(e => showAlert("Error", e.message, "❌", "error"));
         }
 
-        // --- MODERN POP-UP SYSTEM ---
+        // ============ CUSTOM MODAL SYSTEM ============
+        // Alert
+        function showAlert(title, msg, icon = "ℹ️", type = "info") {
+            document.getElementById('alert-title').textContent = title;
+            document.getElementById('alert-msg').textContent = msg;
+            document.getElementById('alert-icon').textContent = icon;
+            const box = document.getElementById('alert-icon-box');
+            if(type === 'success') box.style.cssText = 'width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(128,255,170,0.1);border:1px solid rgba(128,255,170,0.3);';
+            else if(type === 'error') box.style.cssText = 'width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(255,49,49,0.1);border:1px solid rgba(255,49,49,0.3);';
+            else if(type === 'warning') box.style.cssText = 'width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);';
+            else box.style.cssText = 'width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(128,170,255,0.1);border:1px solid rgba(128,170,255,0.3);';
+            document.getElementById('custom-alert').classList.replace('hidden', 'flex');
+        }
+        function closeCustomAlert() { document.getElementById('custom-alert').classList.replace('flex', 'hidden'); }
+
+        // Confirm
+        let _confirmResolve = null;
+        function showConfirm(title, msg) {
+            return new Promise(resolve => {
+                _confirmResolve = resolve;
+                document.getElementById('confirm-title').textContent = title;
+                document.getElementById('confirm-msg').textContent = msg;
+                document.getElementById('custom-confirm').classList.replace('hidden', 'flex');
+            });
+        }
+        function resolveConfirm(val) {
+            document.getElementById('custom-confirm').classList.replace('flex', 'hidden');
+            if(_confirmResolve) { _confirmResolve(val); _confirmResolve = null; }
+        }
+
+        // Prompt (for extend days)
+        let _promptResolve = null;
+        function showPrompt(title, msg) {
+            return new Promise(resolve => {
+                _promptResolve = resolve;
+                document.getElementById('prompt-title').textContent = title;
+                document.getElementById('prompt-msg').textContent = msg;
+                document.getElementById('prompt-input').value = '30';
+                document.getElementById('custom-prompt').classList.replace('hidden', 'flex');
+                setTimeout(() => document.getElementById('prompt-input').focus(), 100);
+            });
+        }
+        function setPromptDays(n) { document.getElementById('prompt-input').value = n; }
+        function resolvePrompt(confirmed) {
+            document.getElementById('custom-prompt').classList.replace('flex', 'hidden');
+            if(_promptResolve) {
+                const val = confirmed ? document.getElementById('prompt-input').value : null;
+                _promptResolve(val);
+                _promptResolve = null;
+            }
+        }
+
+        // triggerPopup (delete confirm)
         function triggerPopup(type, onConfirm) {
             const modal = document.getElementById('custom-popup');
             const icon = document.getElementById('popup-icon');
             const title = document.getElementById('popup-title');
             const desc = document.getElementById('popup-desc');
             const btn = document.getElementById('popup-confirm-btn');
+            const iconContainer = document.getElementById('popup-icon-container');
 
             if(type === 'delete') {
-                title.textContent = "Confirm Delete?";
+                title.textContent = "Delete Record?";
                 desc.textContent = "This action is permanent and cannot be undone.";
-                btn.textContent = "Delete Now";
-                btn.className = "py-3 bg-red-500 text-white font-black rounded-2xl text-[10px] uppercase shadow-lg";
-                icon.innerHTML = '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ff3131" stroke-width="2.5"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
+                btn.textContent = "Delete";
+                btn.style.cssText = 'background:#ff3131; color:#fff; border:none;';
+                btn.className = 'py-3 rounded-2xl font-black text-[11px] uppercase transition';
+                icon.textContent = '🗑️';
+                iconContainer.style.cssText = 'width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(255,49,49,0.1);border:1px solid rgba(255,49,49,0.3);';
             }
-
             btn.onclick = () => { onConfirm(); closePopup(); };
             modal.classList.replace('hidden', 'flex');
         }
-
         function closePopup() { document.getElementById('custom-popup').classList.replace('flex', 'hidden'); }
 
         // --- APP STATE ---
@@ -783,7 +913,7 @@
         const trans = {
             en: { flag: "🇺🇸 EN", sub: "Time Tracker System", addE: "Add Employee", today: "Today", offD: "OFF DAY", worked: "Worked", hrs: "Hours", plOff: "PL OFF", unOff: "UNPL OFF", net: "Net Salary", gross: "Gross", adv: "Advance", addAdv: "Add Advance", date: "Date", in: "In", out: "Out", note: "Note", add: "Add", up: "Update", dayOff: "Day Off", thDate: "Date", thInOut: "In / Out", thDur: "Duration", thRound: "Hours", thEarn: "Earn", thNote: "Note", thAction: "Action", mDays: "Month Days", offT: "Total Off", late: "Late Days", entry: "Entry Time", plun: "PL / UNPL" },
             mm: { flag: "🇲🇲 MM", sub: "အချိန်မှတ်စနစ်", addE: "လူသစ်ထည့်ရန်", today: "ဒီနေ့", offD: "နားရက်", worked: "အလုပ်ရက်", hrs: "နာရီပေါင်း", plOff: "သတ်မှတ်နားရက်", unOff: "အပိုနားရက်", net: "လက်ကျန်လစာ", gross: "စုစုပေါင်းလစာ", adv: "ကြိုထုတ်ငွေ", addAdv: "ကြိုထုတ်ငွေထည့်ရန်", date: "နေ့စွဲ", in: "အဝင်", out: "အထွက်", note: "မှတ်ချက်", add: "ထည့်မည်", up: "ပြင်မည်", dayOff: "နားရက်", thDate: "နေ့စွဲ", thInOut: "အဝင် / အထွက်", thDur: "ကြာချိန်", thRound: "နာရီ", thEarn: "ရရှိငွေ", thNote: "မှတ်ချက်", thAction: "လုပ်ဆောင်ချက်", mDays: "လအတွင်းရက်", offT: "စုစုပေါင်းနားရက်", late: "နောက်ကျသည့်ရက်", entry: "ဝင်ချိန်", plun: "သတ်မှတ် / အပို" },
-            th: { flag: "🇹🇭 TH", sub: "ระบบติดตามเวลา", addE: "เพิ่มพนักงาน", today: "วันนี้", offD: "วันหยุด", worked: "ทำงาน", hrs: "ชั่วโมง", plOff: "ใช่วันหยุด", unOff: "ไม่ใช่วันหยุด", net: "รายได้สุทธิ", gross: "รายได้รวม", adv: "เงินเบิก", addAdv: "เพิ่มเงินเบิก", date: "วันที่", in: "เข้า", out: "ออก", note: "บันทึก", add: "เพิ่ม", up: "แก้ไข", dayOff: "วันหยุด", thDate: "วันที่", thInOut: "เข้า / ออก", thDur: "เวลา", thRound: "ชั่วโมง", thEarn: "รายได้", thNote: "บันทึก", thAction: "จัดการ", mDays: "วันในเดือน", offT: "วันหยุดรวม", late: "มาสาย", entry: "เวลาเข้างาน", plun: "ใช่วันหยุด / ไม่ใช่" }
+            th: { flag: "🇹🇭 TH", sub: "ระบบติดตามเวลา", addE: "เพิ่มพนักงาน", today: "วันนี้", offD: "วันหยุด", worked: "ทำงาน", hrs: "ชั่วโมง", plOff: "ใช่วันหยุด", unOff: "ไม่ใช่วันหยุด", net: "รายได้สุทธิ", gross: "รายได้รวม", adv: "เงินเบิก", addAdv: "เพิ่มเงินเบิก", date: "วันที่", in: "เข้า", out: "ออก", note: "บันทึก", add: "เพิ่ม", up: "แก้ไข", dayOff: "วันหยุด", thDate: "วันที่", thInOut: "เข้า / ออก", thDur: "เวลา", thRound: "ชั่วโมง", thEarn: "รายได้", thNote: "บันทึก", thAction: "จัดการ", mDays: "วันในเดือน", offT: "วันหยุดรวม", late: "มาสาย", entry: "เวลาเข้างาน", plun: "ใช่ / ไม่ใช่" }
         };
 
         // ✅ UPDATE 1 + 2: Auth state with Cloud Sync & Admin Inspect
@@ -1315,19 +1445,17 @@
         async function approveUser() {
             const email = document.getElementById('target-email').value.trim().toLowerCase();
             const days = parseInt(document.getElementById('sub-days').value);
-            if(!email) return alert("Please enter user email.");
+            if(!email) return showAlert("Missing Email", "Please enter user email.", "⚠️", "warning");
             const expiry = Date.now() + (days * 24 * 60 * 60 * 1000);
             const expiryDate = new Date(expiry).toLocaleDateString();
-            // Save subscription
             await db.collection('subscriptions').doc(email).set({ expiry, approved: true, approvedAt: Date.now(), days });
-            // Log history entry
             await db.collection('subHistory').add({ email, days, expiry, approvedAt: Date.now(), action: 'approved' });
-            alert(`✅ Approved! ${email} — ${days} days access until ${expiryDate}`);
+            showAlert("Approved! ✅", `${email}\n${days} days until ${expiryDate}`, "🔓", "success");
             loadSubHistory();
         }
 
         async function extendUser(email, currentExpiry) {
-            const daysInput = prompt(`Extend access for ${email}\nHow many days to add?`, "30");
+            const daysInput = await showPrompt("Extend Access", `User: ${email}`);
             if(!daysInput || isNaN(parseInt(daysInput))) return;
             const days = parseInt(daysInput);
             const base = currentExpiry > Date.now() ? currentExpiry : Date.now();
@@ -1335,14 +1463,16 @@
             const newDate = new Date(newExpiry).toLocaleDateString();
             await db.collection('subscriptions').doc(email).update({ expiry: newExpiry });
             await db.collection('subHistory').add({ email, days, expiry: newExpiry, approvedAt: Date.now(), action: 'extended' });
-            alert(`✅ Extended! ${email} — +${days} days\nNew expiry: ${newDate}`);
+            showAlert("Extended! ✅", `+${days} days\nNew expiry: ${newDate}`, "📅", "success");
             loadSubHistory();
         }
 
         async function revokeUser(email) {
-            if(!confirm(`Revoke access for ${email}?`)) return;
+            const ok = await showConfirm("Revoke Access?", `Remove access for ${email}? This takes effect immediately.`);
+            if(!ok) return;
             await db.collection('subscriptions').doc(email).update({ expiry: Date.now() - 1 });
             await db.collection('subHistory').add({ email, days: 0, expiry: 0, approvedAt: Date.now(), action: 'revoked' });
+            showAlert("Revoked", `Access removed for ${email}`, "🔒", "error");
             loadSubHistory();
         }
 
