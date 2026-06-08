@@ -1237,7 +1237,10 @@
             if(!isOff && (!i || !o)) return;
             const [h1, m1] = i.split(':').map(Number), [h2, m2] = o.split(':').map(Number);
             let diff = (h2 * 60 + m2) - (h1 * 60 + m1); if(diff < 0) diff += 24 * 60;
-            const h = Math.floor(diff/60), m = diff%60, r = m >= 40 ? h+1 : (m >= 30 ? h+0.5 : h);
+            
+            // ဒီနေရာလေးကို Rule အသစ်အတိုင်း ပြောင်းထားပါတယ်
+            const h = Math.floor(diff/60), m = diff%60, r = m >= 40 ? h + 0.5 : h;
+            
             const rec = { id: window.state.editId || Date.now(), date: d, in: isOff ? '-' : i, out: isOff ? '-' : o, rounded: r, durStr: `${h}:${m.toString().padStart(2,'0')}`, isDayOff: isOff, task: n };
             if(window.state.editId) { emp.records = emp.records.map(x => x.id === window.state.editId ? rec : x); window.state.editId = null; }
             else emp.records.push(rec);
