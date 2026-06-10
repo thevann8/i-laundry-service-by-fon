@@ -427,7 +427,12 @@
                     <!-- Search + Add -->
                     <div class="flex flex-col sm:flex-row gap-4">
                         <input type="text" id="searchInput" onkeyup="window.renderList()" placeholder="Search employee..." class="flex-1 py-4 px-6 rounded-3xl card-ui text-white text-lg shadow-sm bg-transparent outline-none border border-zinc-800">
-                        <button id="btnAddWorker" onclick="window.openAddWorkerModal()" class="px-10 py-4 rounded-3xl bg-emerald-500 text-black font-black active:scale-95 transition uppercase text-sm">Add Employee</button>
+                        <button id="btnAddWorker" onclick="window.openAddWorkerModal()" class="px-10 py-4 rounded-3xl bg-emerald-500 text-black font-black active:scale-95 transition uppercase text-sm" data-lang="addE">Add Employee</button>
+                    </div>
+                    <!-- Print + Excel -->
+                    <div class="flex gap-3">
+                        <button onclick="window.printMonthlyList()" class="flex-1 py-3 rounded-2xl font-black uppercase text-sm transition active:scale-95" style="background:#fff;color:#000;border:2px solid #fff;" data-lang="pPrint">Print</button>
+                        <button onclick="window.exportExcel()" class="flex-1 py-3 rounded-2xl font-black uppercase text-sm transition active:scale-95" style="background:#000;color:#fff;border:2px solid #fff;" data-lang="pExcel">Export Excel</button>
                     </div>
                     <div id="workerGrid" class="grid grid-cols-1 gap-4"></div>
                 </div>
@@ -921,9 +926,12 @@
         window.state = { id: null, lang: 'en', date: new Date(), isSubscribed: false, privacy: false, editId: null };
 
         const trans = {
-            en: { flag: "🇺🇸 EN", sub: "Time Tracker System", addE: "Add Employee", today: "Today", offD: "OFF DAY", worked: "Worked", hrs: "Hours", plOff: "PL OFF", unOff: "UNPL OFF", net: "Net Salary", gross: "Gross", adv: "Advance", addAdv: "Add Advance", date: "Date", in: "In", out: "Out", note: "Note", add: "Add", up: "Update", dayOff: "Day Off", thDate: "Date", thInOut: "In / Out", thDur: "Duration", thRound: "Hours", thEarn: "Earn", thNote: "Note", thAction: "Action", mDays: "Month Days", offT: "Total Off", late: "Late Days", entry: "Entry Time", plun: "PL / UNPL" },
-            mm: { flag: "🇲🇲 MM", sub: "အချိန်မှတ်စနစ်", addE: "လူသစ်ထည့်ရန်", today: "ဒီနေ့", offD: "နားရက်", worked: "အလုပ်ရက်", hrs: "နာရီပေါင်း", plOff: "သတ်မှတ်နားရက်", unOff: "အပိုနားရက်", net: "လက်ကျန်လစာ", gross: "စုစုပေါင်းလစာ", adv: "ကြိုထုတ်ငွေ", addAdv: "ကြိုထုတ်ငွေထည့်ရန်", date: "နေ့စွဲ", in: "အဝင်", out: "အထွက်", note: "မှတ်ချက်", add: "ထည့်မည်", up: "ပြင်မည်", dayOff: "နားရက်", thDate: "နေ့စွဲ", thInOut: "အဝင် / အထွက်", thDur: "ကြာချိန်", thRound: "နာရီ", thEarn: "ရရှိငွေ", thNote: "မှတ်ချက်", thAction: "လုပ်ဆောင်ချက်", mDays: "လအတွင်းရက်", offT: "စုစုပေါင်းနားရက်", late: "နောက်ကျသည့်ရက်", entry: "ဝင်ချိန်", plun: "သတ်မှတ် / အပို" },
-            th: { flag: "🇹🇭 TH", sub: "ระบบติดตามเวลา", addE: "เพิ่มพนักงาน", today: "วันนี้", offD: "วันหยุด", worked: "ทำงาน", hrs: "ชั่วโมง", plOff: "ใช่วันหยุด", unOff: "ไม่ใช่วันหยุด", net: "รายได้สุทธิ", gross: "รายได้รวม", adv: "เงินเบิก", addAdv: "เพิ่มเงินเบิก", date: "วันที่", in: "เข้า", out: "ออก", note: "บันทึก", add: "เพิ่ม", up: "แก้ไข", dayOff: "วันหยุด", thDate: "วันที่", thInOut: "เข้า / ออก", thDur: "เวลา", thRound: "ชั่วโมง", thEarn: "รายได้", thNote: "บันทึก", thAction: "จัดการ", mDays: "วันในเดือน", offT: "วันหยุดรวม", late: "มาสาย", entry: "เวลาเข้างาน", plun: "ใช่ / ไม่ใช่" }
+            en: { flag: "🇺🇸 EN", sub: "Time Tracker System", addE: "Add Employee", today: "Today", offD: "OFF DAY", worked: "Worked", hrs: "Hours", plOff: "PL OFF", unOff: "UNPL OFF", net: "Net Amount", gross: "Total Amount", adv: "Advance", addAdv: "Add Advance", date: "Date", in: "In", out: "Out", note: "Note", add: "Add", up: "Update", dayOff: "Day Off", thDate: "Date", thInOut: "In / Out", thDur: "Duration", thRound: "Hours", thEarn: "Earn", thNote: "Note", thAction: "Action", mDays: "Month Days", offT: "Total Off", late: "Late Days", entry: "Entry Time", plun: "PL / UNPL",
+                pNo: "No.", pName: "Name", pHours: "Hours", pNetAmt: "Net Amount", pTotalAmt: "Total Amount", pTitle: "Monthly Salary Report", pPrint: "Print", pExcel: "Export Excel" },
+            mm: { flag: "🇲🇲 MM", sub: "အချိန်မှတ်စနစ်", addE: "လူသစ်ထည့်ရန်", today: "ဒီနေ့", offD: "နားရက်", worked: "အလုပ်ရက်", hrs: "နာရီပေါင်း", plOff: "သတ်မှတ်နားရက်", unOff: "အပိုနားရက်", net: "လက်ကျန်ပမာဏ", gross: "စုစုပေါင်းပမာဏ", adv: "ကြိုထုတ်ငွေ", addAdv: "ကြိုထုတ်ငွေထည့်ရန်", date: "နေ့စွဲ", in: "အဝင်", out: "အထွက်", note: "မှတ်ချက်", add: "ထည့်မည်", up: "ပြင်မည်", dayOff: "နားရက်", thDate: "နေ့စွဲ", thInOut: "အဝင် / အထွက်", thDur: "ကြာချိန်", thRound: "နာရီ", thEarn: "ရရှိငွေ", thNote: "မှတ်ချက်", thAction: "လုပ်ဆောင်ချက်", mDays: "လအတွင်းရက်", offT: "စုစုပေါင်းနားရက်", late: "နောက်ကျသည့်ရက်", entry: "ဝင်ချိန်", plun: "သတ်မှတ် / အပို",
+                pNo: "စဉ်", pName: "အမည်", pHours: "နာရီ", pNetAmt: "လက်ကျန်ပမာဏ", pTotalAmt: "စုစုပေါင်းပမာဏ", pTitle: "လစဉ်လစာစာရင်း", pPrint: "ပုံနှိပ်", pExcel: "Excel ထုတ်ရန်" },
+            th: { flag: "🇹🇭 TH", sub: "ระบบติดตามเวลา", addE: "เพิ่มพนักงาน", today: "วันนี้", offD: "วันหยุด", worked: "ทำงาน", hrs: "ชั่วโมง", plOff: "ใช่วันหยุด", unOff: "ไม่ใช่วันหยุด", net: "ยอดสุทธิ", gross: "ยอดรวม", adv: "เงินเบิก", addAdv: "เพิ่มเงินเบิก", date: "วันที่", in: "เข้า", out: "ออก", note: "บันทึก", add: "เพิ่ม", up: "แก้ไข", dayOff: "วันหยุด", thDate: "วันที่", thInOut: "เข้า / ออก", thDur: "เวลา", thRound: "ชั่วโมง", thEarn: "รายได้", thNote: "บันทึก", thAction: "จัดการ", mDays: "วันในเดือน", offT: "วันหยุดรวม", late: "มาสาย", entry: "เวลาเข้างาน", plun: "ใช่ / ไม่ใช่",
+                pNo: "ที่", pName: "ชื่อ", pHours: "ชั่วโมง", pNetAmt: "ยอดสุทธิ", pTotalAmt: "ยอดรวม", pTitle: "รายงานเงินเดือนประจำเดือน", pPrint: "พิมพ์", pExcel: "ส่งออก Excel" }
         };
 
         // ✅ UPDATE 1 + 2: Auth state with Cloud Sync & Admin Inspect
@@ -1155,7 +1163,7 @@
         window.renderDetail = () => {
             const emp = employees.find(e => e.id === window.state.id); 
             const l = trans[window.state.lang];
-            const mStr = window.state.date.toISOString().slice(0, 7);
+            const mStr = window.state.date.getFullYear() + '-' + String(window.state.date.getMonth() + 1).padStart(2, '0');
             const monthLabel = window.state.date.toLocaleString(window.state.lang, { month: 'long', year: 'numeric' });
             document.getElementById('monthLabel').textContent = monthLabel;
             const records = emp.records.filter(r => r.date.startsWith(mStr)).sort((a,b) => new Date(b.date) - new Date(a.date));
@@ -1293,6 +1301,11 @@
             document.getElementById('lblPlUnpl').textContent = l.plun;
             document.getElementById('lblEntry').textContent = l.entry + ":"; 
             document.getElementById('btnAddAdv').textContent = l.addAdv;
+            // Update all data-lang buttons
+            document.querySelectorAll('[data-lang]').forEach(function(el) {
+                var key = el.getAttribute('data-lang');
+                if(l[key]) el.textContent = l[key];
+            });
         };
 
         window.saveRecord = (isOff) => {
@@ -1328,7 +1341,7 @@
         // ✅ Advance History Renderer
         window.renderAdvHistory = () => {
             const emp = employees.find(e => e.id === window.state.id);
-            const mStr = window.state.date.toISOString().slice(0, 7);
+            const mStr = window.state.date.getFullYear() + '-' + String(window.state.date.getMonth() + 1).padStart(2, '0');
             const advList = (emp.advances || []).filter(a => a.date.startsWith(mStr)).sort((a,b) => new Date(b.date) - new Date(a.date));
             const body = document.getElementById('advBody');
             const empty = document.getElementById('advEmpty');
@@ -1581,6 +1594,95 @@
                 body.innerHTML = `<tr><td colspan="5" class="px-4 py-4 text-center text-red-500 text-xs font-bold">Error: ${e.message}</td></tr>`;
             }
         }
+
+        window.printMonthlyList = function() {
+            var l = trans[window.state.lang];
+            var mm = String(window.listDate.getMonth() + 1).padStart(2, '0');
+            var yyyy = window.listDate.getFullYear();
+            var mStr = yyyy + '-' + mm;
+            var monthLabel = window.listDate.toLocaleString(window.state.lang, { month: 'long', year: 'numeric' });
+
+            var rows = '';
+            var totalHrs = 0, totalNet = 0, totalGross = 0;
+            var idx = 1;
+            employees.forEach(function(emp) {
+                var recs = emp.records.filter(function(r){ return r.date.startsWith(mStr); });
+                var hrs = recs.reduce(function(s,r){ return s+(r.rounded||0); }, 0);
+                var adv = (emp.advances||[]).filter(function(a){ return a.date.startsWith(mStr); }).reduce(function(s,a){ return s+a.amount; }, 0);
+                var gross = hrs * 40;
+                var net = gross - adv;
+                totalHrs += hrs; totalNet += net; totalGross += gross;
+                rows += '<tr>'
+                    + '<td style="padding:10px 14px;text-align:center;border-bottom:1px solid #e5e7eb;">' + idx + '</td>'
+                    + '<td style="padding:10px 14px;border-bottom:1px solid #e5e7eb;font-weight:700;">' + emp.name + '</td>'
+                    + '<td style="padding:10px 14px;text-align:center;border-bottom:1px solid #e5e7eb;">' + hrs.toFixed(1) + '</td>'
+                    + '<td style="padding:10px 14px;text-align:right;border-bottom:1px solid #e5e7eb;">' + gross.toLocaleString() + '</td>'
+                    + '<td style="padding:10px 14px;text-align:right;border-bottom:1px solid #e5e7eb;font-weight:700;">' + net.toLocaleString() + '</td>'
+                    + '</tr>';
+                idx++;
+            });
+            rows += '<tr style="background:#f3f4f6;font-weight:900;">'
+                + '<td colspan="2" style="padding:12px 14px;text-align:right;">TOTAL</td>'
+                + '<td style="padding:12px 14px;text-align:center;">' + totalHrs.toFixed(1) + '</td>'
+                + '<td style="padding:12px 14px;text-align:right;">' + totalGross.toLocaleString() + '</td>'
+                + '<td style="padding:12px 14px;text-align:right;">' + totalNet.toLocaleString() + '</td>'
+                + '</tr>';
+
+            var html = '<!DOCTYPE html><html><head><meta charset="UTF-8">'
+                + '<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Arial,sans-serif;font-size:13px;color:#000;background:#fff;padding:32px;}'
+                + 'h1{font-size:20px;font-weight:900;text-transform:uppercase;letter-spacing:2px;margin-bottom:4px;}'
+                + 'p.sub{font-size:12px;color:#555;margin-bottom:20px;}'
+                + 'table{width:100%;border-collapse:collapse;}th{background:#000;color:#fff;padding:10px 14px;text-align:center;font-size:11px;text-transform:uppercase;letter-spacing:1px;}'
+                + 'th:nth-child(2){text-align:left;}th:nth-child(4),th:nth-child(5){text-align:right;}'
+                + 'tr:hover{background:#f9fafb;}'
+                + '.footer{margin-top:20px;font-size:11px;color:#999;text-align:right;}'
+                + '@media print{body{padding:16px;}button{display:none;}}'
+                + '</style></head><body>'
+                + '<h1>I LAUNDRY SERVICE</h1>'
+                + '<p class="sub">' + l.pTitle + ' — ' + monthLabel + '</p>'
+                + '<table><thead><tr>'
+                + '<th>' + l.pNo + '</th><th>' + l.pName + '</th><th>' + l.pHours + '</th><th>' + l.pTotalAmt + '</th><th>' + l.pNetAmt + '</th>'
+                + '</tr></thead><tbody>' + rows + '</tbody></table>'
+                + '<p class="footer">I Laundry Service &copy; ' + yyyy + '</p>'
+                + '<script>window.onload=function(){window.print();}<\/script>'
+                + '</body></html>';
+
+            var w = window.open('', '_blank');
+            w.document.write(html);
+            w.document.close();
+        };
+
+        window.exportExcel = function() {
+            var l = trans[window.state.lang];
+            var mm = String(window.listDate.getMonth() + 1).padStart(2, '0');
+            var yyyy = window.listDate.getFullYear();
+            var mStr = yyyy + '-' + mm;
+            var monthLabel = window.listDate.toLocaleString(window.state.lang, { month: 'long', year: 'numeric' });
+
+            var csv = l.pNo + ',' + l.pName + ',' + l.pHours + ',' + l.pTotalAmt + ',' + l.pNetAmt + '\n';
+            var totalHrs = 0, totalNet = 0, totalGross = 0;
+            var idx = 1;
+            employees.forEach(function(emp) {
+                var recs = emp.records.filter(function(r){ return r.date.startsWith(mStr); });
+                var hrs = recs.reduce(function(s,r){ return s+(r.rounded||0); }, 0);
+                var adv = (emp.advances||[]).filter(function(a){ return a.date.startsWith(mStr); }).reduce(function(s,a){ return s+a.amount; }, 0);
+                var gross = hrs * 40;
+                var net = gross - adv;
+                totalHrs += hrs; totalNet += net; totalGross += gross;
+                csv += idx + ',"' + emp.name + '",' + hrs.toFixed(1) + ',' + gross + ',' + net + '\n';
+                idx++;
+            });
+            csv += 'TOTAL,,' + totalHrs.toFixed(1) + ',' + totalGross + ',' + totalNet + '\n';
+
+            var bom = '\uFEFF';
+            var blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8;' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'ilaundry-' + mStr + '.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+        };
 
         window.onload = () => { 
             document.getElementById('inDate').value = new Date().toISOString().slice(0, 10); 
