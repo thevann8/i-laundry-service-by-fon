@@ -535,21 +535,21 @@
                             </div>
 
                             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 text-center">
-                                <div class="p-4 rounded-3xl card-ui bg-zinc-900"><p id="lblMonthDays" class="text-[10px] font-bold uppercase opacity-40 mb-1"></p><p id="statMonthDays" class="text-xl font-black text-white">0</p></div>
-                                <div class="p-4 rounded-3xl card-ui bg-zinc-900"><p id="lblWorked" class="text-[10px] font-bold uppercase opacity-40 mb-1"></p><p id="statWorked" class="text-xl font-black text-emerald-500">0</p></div>
-                                <div class="p-4 rounded-3xl card-ui bg-zinc-900"><p id="lblHours" class="text-[10px] font-bold uppercase opacity-40 mb-1"></p><p id="statHrs" class="text-xl font-black text-emerald-500">0</p></div>
-                                <div class="p-4 rounded-3xl card-ui bg-zinc-900 border-amber-500/20"><p id="lblLate" class="text-[10px] font-bold uppercase text-amber-500 mb-1"></p><p id="statLate" class="text-xl font-black text-amber-500">0</p></div>
-                                <div class="p-4 rounded-3xl card-ui bg-zinc-900"><p id="lblOffTotal" class="text-[10px] font-bold uppercase opacity-40 mb-1"></p><p id="statOffTotal" class="text-xl font-black text-pink-500">0</p></div>
-                                <div class="p-4 rounded-3xl card-ui bg-zinc-900"><p id="lblPlUnpl" class="text-[10px] font-bold uppercase opacity-40 mb-1"></p><p id="statPlUnpl" class="text-lg font-black text-white opacity-60">0 / 0</p></div>
+                                <div class="p-4 rounded-3xl card-ui bg-zinc-900"><p id="lblMonthDays" class="text-xs font-bold uppercase opacity-40 mb-1"></p><p id="statMonthDays" class="text-3xl font-black text-white">0</p></div>
+                                <div class="p-4 rounded-3xl card-ui bg-zinc-900"><p id="lblWorked" class="text-xs font-bold uppercase opacity-40 mb-1"></p><p id="statWorked" class="text-3xl font-black text-emerald-500">0</p></div>
+                                <div class="p-4 rounded-3xl card-ui bg-zinc-900"><p id="lblHours" class="text-xs font-bold uppercase opacity-40 mb-1"></p><p id="statHrs" class="text-3xl font-black text-emerald-500">0</p></div>
+                                <div class="p-4 rounded-3xl card-ui bg-zinc-900 border-amber-500/20"><p id="lblLate" class="text-xs font-bold uppercase text-amber-500 mb-1"></p><p id="statLate" class="text-3xl font-black text-amber-500">0</p></div>
+                                <div class="p-4 rounded-3xl card-ui bg-zinc-900"><p id="lblOffTotal" class="text-xs font-bold uppercase opacity-40 mb-1"></p><p id="statOffTotal" class="text-3xl font-black text-pink-500">0</p></div>
+                                <div class="p-4 rounded-3xl card-ui bg-zinc-900"><p id="lblPlUnpl" class="text-xs font-bold uppercase opacity-40 mb-1"></p><p id="statPlUnpl" class="text-2xl font-black text-white opacity-60">0 / 0</p></div>
                             </div>
                         </div>
 
                         <div class="lg:col-span-4 p-8 rounded-3xl card-ui relative overflow-hidden bg-zinc-900 shadow-xl border border-zinc-800">
                             <div class="flex justify-between items-start mb-6">
-                                <div><p id="lblNetTotal" class="text-xs font-black text-emerald-500 uppercase mb-1"></p><span id="valNet" class="text-4xl font-black text-emerald-500 tracking-tighter">0</span></div>
+                                <div><p id="lblNetTotal" class="text-xs font-black text-emerald-500 uppercase mb-1"></p><span id="valNet" class="text-5xl font-black text-emerald-500 tracking-tighter">0</span></div>
                                 <button onclick="window.togglePrivacy()" class="p-2 rounded-full hover:bg-white/10 transition print-hidden"><svg id="privacyIcon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
                             </div>
-                            <div class="space-y-2 mb-4 text-[11px] font-bold">
+                            <div class="space-y-2 mb-4 text-sm font-bold">
                                 <div class="flex justify-between"><span id="lblGross" class="text-white/60 uppercase"></span><span id="valGross" class="text-amber-500 font-black">0</span></div>
                                 <div class="flex justify-between"><span id="lblAdv" class="text-white/60 uppercase"></span><span id="valAdvance" class="text-pink-500 font-black">0</span></div>
                             </div>
@@ -590,7 +590,7 @@
 
                     <div class="rounded-3xl card-ui overflow-hidden shadow-sm border border-zinc-800">
                         <div class="overflow-x-auto"><table class="w-full text-left min-w-[850px]">
-                            <thead class="bg-zinc-900/50 text-[10px] font-black text-zinc-500 uppercase">
+                            <thead class="bg-zinc-900/50 text-xs font-black text-zinc-500 uppercase">
                                 <tr><th id="thDate" class="px-6 py-4"></th><th id="thInOut" class="px-6 py-4"></th><th id="thDur" class="px-6 py-4"></th><th id="thRound" class="px-6 py-4"></th><th id="thEarn" class="px-6 py-4 text-emerald-500 font-black"></th><th id="thNote" class="px-6 py-4"></th><th id="thAction" class="px-6 py-4 text-right print-hidden"></th></tr>
                             </thead>
                             <tbody id="recBody" class="divide-y divide-zinc-800 font-medium text-white"></tbody>
@@ -1108,7 +1108,9 @@
                 totalAmount += (hrs * 40) - adv;
             });
             var sumEl = document.getElementById('listMonthSummary');
-            if(sumEl) sumEl.textContent = totalWorkers + ' person \u00b7 Total ' + (window.state.privacy ? '****' : totalAmount.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})) + ' \u0e3f';
+            var lSum = trans[window.state.lang];
+            var personWord = { en: 'person', mm: 'ဦး', th: 'คน' };
+            if(sumEl) sumEl.textContent = totalWorkers + ' ' + (personWord[window.state.lang]||'person') + ' · ' + lSum.net + ' ' + (window.state.privacy ? '****' : totalAmount.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})) + ' ฿';
 
             // Show ALL employees always
             employees.forEach(function(emp) {
@@ -1126,12 +1128,15 @@
                 card.style.borderRadius = '1.25rem';
                 card.onclick = function(e) { if(!e.target.closest('button')) { window.state.date = new Date(window.listDate); window.selectWorker(emp.id); } };
 
+                var l = trans[window.state.lang];
+                var advDisplay = adv > 0 ? '<div style="border-top:1px solid #27272a;margin-top:8px;padding-top:8px;display:flex;justify-content:space-between;align-items:center;"><span style="font-size:11px;font-weight:700;opacity:0.5;text-transform:uppercase;">' + l.adv + '</span><span style="font-size:14px;font-weight:900;color:#f472b6;">-' + adv.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0}) + ' \u0e3f</span></div>' : '';
                 var statsHTML = hasData
                     ? '<div style="border-top:1px solid #27272a;margin-top:14px;padding-top:14px;display:grid;grid-template-columns:1fr 1fr 1fr;text-align:center;gap:8px;">'
-                        + '<div><p style="font-size:10px;font-weight:900;text-transform:uppercase;opacity:0.4;margin-bottom:4px;">Days</p><p style="font-size:22px;font-weight:900;color:#fff;">' + workedDays + '</p></div>'
-                        + '<div><p style="font-size:10px;font-weight:900;text-transform:uppercase;opacity:0.4;margin-bottom:4px;">Hours</p><p style="font-size:22px;font-weight:900;color:#fff;">' + hrs.toFixed(1) + '</p></div>'
-                        + '<div><p style="font-size:10px;font-weight:900;text-transform:uppercase;opacity:0.4;margin-bottom:4px;">Net \u0e3f</p><p style="font-size:22px;font-weight:900;color:#80ffaa;">' + (window.state.privacy ? '****' : net.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})) + '</p></div>'
+                        + '<div><p style="font-size:10px;font-weight:900;text-transform:uppercase;opacity:0.4;margin-bottom:4px;">' + l.worked + '</p><p style="font-size:22px;font-weight:900;color:#fff;">' + workedDays + '</p></div>'
+                        + '<div><p style="font-size:10px;font-weight:900;text-transform:uppercase;opacity:0.4;margin-bottom:4px;">' + l.hrs + '</p><p style="font-size:22px;font-weight:900;color:#fff;">' + hrs.toFixed(1) + '</p></div>'
+                        + '<div><p style="font-size:10px;font-weight:900;text-transform:uppercase;opacity:0.4;margin-bottom:4px;">' + l.net + '</p><p style="font-size:22px;font-weight:900;color:#80ffaa;">' + (window.state.privacy ? '****' : net.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})) + '</p></div>'
                         + '</div>'
+                        + advDisplay
                     : '<div style="border-top:1px solid #27272a;margin-top:14px;padding-top:10px;text-align:center;"><p style="font-size:11px;opacity:0.3;font-weight:700;text-transform:uppercase;">No records this month</p></div>';
 
                 card.innerHTML = '<div style="padding:20px 20px 0 20px;display:flex;justify-content:space-between;align-items:center;">'
@@ -1603,7 +1608,7 @@
             var monthLabel = window.listDate.toLocaleString(window.state.lang, { month: 'long', year: 'numeric' });
 
             var rows = '';
-            var totalHrs = 0, totalNet = 0, totalGross = 0;
+            var totalHrs = 0, totalNet = 0, totalGross = 0, totalAdv = 0;
             var idx = 1;
             employees.forEach(function(emp) {
                 var recs = emp.records.filter(function(r){ return r.date.startsWith(mStr); });
@@ -1611,12 +1616,13 @@
                 var adv = (emp.advances||[]).filter(function(a){ return a.date.startsWith(mStr); }).reduce(function(s,a){ return s+a.amount; }, 0);
                 var gross = hrs * 40;
                 var net = gross - adv;
-                totalHrs += hrs; totalNet += net; totalGross += gross;
+                totalHrs += hrs; totalNet += net; totalGross += gross; totalAdv += adv;
                 rows += '<tr>'
                     + '<td style="padding:10px 14px;text-align:center;border-bottom:1px solid #e5e7eb;">' + idx + '</td>'
                     + '<td style="padding:10px 14px;border-bottom:1px solid #e5e7eb;font-weight:700;">' + emp.name + '</td>'
                     + '<td style="padding:10px 14px;text-align:center;border-bottom:1px solid #e5e7eb;">' + hrs.toFixed(1) + '</td>'
                     + '<td style="padding:10px 14px;text-align:right;border-bottom:1px solid #e5e7eb;">' + gross.toLocaleString() + '</td>'
+                    + '<td style="padding:10px 14px;text-align:right;border-bottom:1px solid #e5e7eb;color:#e11d48;">' + (adv > 0 ? '-'+adv.toLocaleString() : '-') + '</td>'
                     + '<td style="padding:10px 14px;text-align:right;border-bottom:1px solid #e5e7eb;font-weight:700;">' + net.toLocaleString() + '</td>'
                     + '</tr>';
                 idx++;
@@ -1625,6 +1631,7 @@
                 + '<td colspan="2" style="padding:12px 14px;text-align:right;">TOTAL</td>'
                 + '<td style="padding:12px 14px;text-align:center;">' + totalHrs.toFixed(1) + '</td>'
                 + '<td style="padding:12px 14px;text-align:right;">' + totalGross.toLocaleString() + '</td>'
+                + '<td style="padding:12px 14px;text-align:right;color:#e11d48;">' + (totalAdv > 0 ? '-'+totalAdv.toLocaleString() : '-') + '</td>'
                 + '<td style="padding:12px 14px;text-align:right;">' + totalNet.toLocaleString() + '</td>'
                 + '</tr>';
 
@@ -1641,7 +1648,7 @@
                 + '<h1>I LAUNDRY SERVICE</h1>'
                 + '<p class="sub">' + l.pTitle + ' — ' + monthLabel + '</p>'
                 + '<table><thead><tr>'
-                + '<th>' + l.pNo + '</th><th>' + l.pName + '</th><th>' + l.pHours + '</th><th>' + l.pTotalAmt + '</th><th>' + l.pNetAmt + '</th>'
+                + '<th>' + l.pNo + '</th><th>' + l.pName + '</th><th>' + l.pHours + '</th><th>' + l.pTotalAmt + '</th><th>' + l.adv + '</th><th>' + l.pNetAmt + '</th>'
                 + '</tr></thead><tbody>' + rows + '</tbody></table>'
                 + '<p class="footer">I Laundry Service &copy; ' + yyyy + '</p>'
                 + '<script>window.onload=function(){window.print();}<\/script>'
@@ -1659,8 +1666,8 @@
             var mStr = yyyy + '-' + mm;
             var monthLabel = window.listDate.toLocaleString(window.state.lang, { month: 'long', year: 'numeric' });
 
-            var csv = l.pNo + ',' + l.pName + ',' + l.pHours + ',' + l.pTotalAmt + ',' + l.pNetAmt + '\n';
-            var totalHrs = 0, totalNet = 0, totalGross = 0;
+            var csv = l.pNo + ',' + l.pName + ',' + l.pHours + ',' + l.pTotalAmt + ',' + l.adv + ',' + l.pNetAmt + '\n';
+            var totalHrs = 0, totalNet = 0, totalGross = 0, totalAdv2 = 0;
             var idx = 1;
             employees.forEach(function(emp) {
                 var recs = emp.records.filter(function(r){ return r.date.startsWith(mStr); });
@@ -1668,11 +1675,11 @@
                 var adv = (emp.advances||[]).filter(function(a){ return a.date.startsWith(mStr); }).reduce(function(s,a){ return s+a.amount; }, 0);
                 var gross = hrs * 40;
                 var net = gross - adv;
-                totalHrs += hrs; totalNet += net; totalGross += gross;
-                csv += idx + ',"' + emp.name + '",' + hrs.toFixed(1) + ',' + gross + ',' + net + '\n';
+                totalHrs += hrs; totalNet += net; totalGross += gross; totalAdv2 += adv;
+                csv += idx + ',"' + emp.name + '",' + hrs.toFixed(1) + ',' + gross + ',' + adv + ',' + net + '\n';
                 idx++;
             });
-            csv += 'TOTAL,,' + totalHrs.toFixed(1) + ',' + totalGross + ',' + totalNet + '\n';
+            csv += 'TOTAL,,' + totalHrs.toFixed(1) + ',' + totalGross + ',' + totalAdv2 + ',' + totalNet + '\n';
 
             var bom = '\uFEFF';
             var blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8;' });
