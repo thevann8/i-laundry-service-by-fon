@@ -10,6 +10,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -519,7 +520,7 @@
                                     </div>
                                 </div>
                                 <div class="flex gap-2 print-hidden">
-                                    <button onclick="window.exportCSV()" class="px-4 py-2 bg-zinc-800 rounded-xl text-[10px] font-black uppercase transition text-white">💾 CSV</button>
+                                    <button onclick="window.exportCSV()" class="px-4 py-2 bg-zinc-800 rounded-xl text-[10px] font-black uppercase transition text-white">📊 Excel</button>
                                     <button onclick="window.print()" class="px-4 py-2 bg-pink-600 rounded-xl text-[10px] font-black uppercase transition text-white shadow-lg">🖨️ Print</button>
                                 </div>
                             </div>
@@ -1522,15 +1523,96 @@
             window.scrollTo({ top: 0, behavior: 'smooth' }); 
         };
 
-        window.exportCSV = () => { 
-            const emp = employees.find(e => e.id === window.state.id); 
-            let csv = "Date,In,Out,Hours,Earn,Note\n"; 
-            emp.records.forEach(r => csv += `${r.date},${r.in},${r.out},${r.rounded},${r.rounded*40},${r.task}\n`); 
-            const blob = new Blob([csv], { type: 'text/csv' }); 
-            const a = document.createElement('a'); 
-            a.href = URL.createObjectURL(blob); 
-            a.download = `${emp.name}_Report.csv`; 
-            a.click(); 
+        window.exportCSV = function() {
+            var emp = employees.find(function(e){ return e.id === window.state.id; });
+            var l = trans[window.state.lang];
+            var mm = String(window.state.date.getMonth() + 1).padStart(2, '0');
+            var yyyy = window.state.date.getFullYear();
+            var mStr = yyyy + '-' + mm;
+            var monthLabel = window.state.date.toLocaleString(window.state.lang, { month: 'long', year: 'numeric' });
+
+            // Filter current month only
+            var records = emp.records
+                .filter(function(r){ return r.date.startsWith(mStr); })
+                .sort(function(a,b){ return new Date(a.date) - new Date(b.date); });
+
+            var advances = (emp.advances||[]).filter(function(a){ return a.date.startsWith(mStr); });
+
+            // Build worksheet data
+            var wsData = [];
+
+            // Title rows
+            wsData.push(['I LAUNDRY SERVICE']);
+            wsData.push([emp.name + ' — ' + monthLabel]);
+            wsData.push([]);
+
+            // Header row
+            wsData.push([l.thDate, l.thInOut, l.thDur, l.thRound, l.thEarn, l.thNote]);
+
+            // Data rows
+            var totalHrs = 0, totalEarn = 0;
+            records.forEach(function(r) {
+                var earn = r.isDayOff ? 0 : (r.rounded * 40);
+                totalHrs += r.isDayOff ? 0 : (r.rounded || 0);
+                totalEarn += earn;
+                wsData.push([
+                    r.date,
+                    r.isDayOff ? '-' : (r.in + ' → ' + r.out),
+                    r.isDayOff ? '-' : (r.durStr || '-'),
+                    r.isDayOff ? '-' : (r.rounded || 0),
+                    r.isDayOff ? (r.in === '-' ? 'PL OFF' : 'UNPL OFF') : earn,
+                    r.task || '-'
+                ]);
+            });
+
+            // Total row
+            wsData.push([]);
+            wsData.push(['TOTAL', '', '', totalHrs, totalEarn, '']);
+
+            // Advance section
+            if(advances.length > 0) {
+                wsData.push([]);
+                wsData.push([l.adv]);
+                wsData.push([l.date, l.adv, l.note]);
+                var totalAdv = 0;
+                advances.forEach(function(a) {
+                    totalAdv += a.amount;
+                    wsData.push([a.date, a.amount, a.note || '-']);
+                });
+                wsData.push(['TOTAL', totalAdv, '']);
+                wsData.push([]);
+                wsData.push([l.gross, totalEarn]);
+                wsData.push([l.adv, totalAdv]);
+                wsData.push([l.net, totalEarn - totalAdv]);
+            }
+
+            // Create workbook
+            var wb = XLSX.utils.book_new();
+            var ws = XLSX.utils.aoa_to_sheet(wsData);
+
+            // Column widths
+            ws['!cols'] = [
+                {wch:14}, {wch:18}, {wch:10}, {wch:8}, {wch:10}, {wch:20}
+            ];
+
+            // Style title rows bold
+            var styleTitle = {font:{bold:true, sz:14}};
+            var styleHeader = {font:{bold:true, color:{rgb:'FFFFFF'}}, fill:{fgColor:{rgb:'000000'}}, alignment:{horizontal:'center'}};
+            var styleTotalRow = {font:{bold:true}, fill:{fgColor:{rgb:'F3F4F6'}}};
+
+            // Apply styles to header row (row index 3 = wsData[3])
+            var headerRowIdx = 3;
+            var cols = ['A','B','C','D','E','F'];
+            cols.forEach(function(c) {
+                var cell = ws[c + (headerRowIdx+1)];
+                if(cell) cell.s = styleHeader;
+            });
+            // Title bold
+            if(ws['A1']) ws['A1'].s = {font:{bold:true, sz:14}};
+            if(ws['A2']) ws['A2'].s = {font:{bold:true, sz:11, color:{rgb:'555555'}}};
+
+            XLSX.utils.book_append_sheet(wb, ws, monthLabel.slice(0,31));
+            XLSX.writeFile(wb, emp.name + '_' + mStr + '.xlsx');
         };
 
         // ADMIN APPROVE
