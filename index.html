@@ -1531,88 +1531,104 @@
             var mStr = yyyy + '-' + mm;
             var monthLabel = window.state.date.toLocaleString(window.state.lang, { month: 'long', year: 'numeric' });
 
-            // Filter current month only
             var records = emp.records
                 .filter(function(r){ return r.date.startsWith(mStr); })
                 .sort(function(a,b){ return new Date(a.date) - new Date(b.date); });
-
             var advances = (emp.advances||[]).filter(function(a){ return a.date.startsWith(mStr); });
 
-            // Build worksheet data
-            var wsData = [];
+            var totalHrs = 0, totalEarn = 0, totalAdv = 0;
+            records.forEach(function(r){ if(!r.isDayOff){ totalHrs += (r.rounded||0); totalEarn += (r.rounded||0)*40; } });
+            advances.forEach(function(a){ totalAdv += a.amount; });
+            var netAmt = totalEarn - totalAdv;
 
-            // Title rows
-            wsData.push(['I LAUNDRY SERVICE']);
-            wsData.push([emp.name + ' — ' + monthLabel]);
-            wsData.push([]);
-
-            // Header row
-            wsData.push([l.thDate, l.thInOut, l.thDur, l.thRound, l.thEarn, l.thNote]);
-
-            // Data rows
-            var totalHrs = 0, totalEarn = 0;
+            // Build styled HTML table for Excel
+            var rows = '';
             records.forEach(function(r) {
-                var earn = r.isDayOff ? 0 : (r.rounded * 40);
-                totalHrs += r.isDayOff ? 0 : (r.rounded || 0);
-                totalEarn += earn;
-                wsData.push([
-                    r.date,
-                    r.isDayOff ? '-' : (r.in + ' → ' + r.out),
-                    r.isDayOff ? '-' : (r.durStr || '-'),
-                    r.isDayOff ? '-' : (r.rounded || 0),
-                    r.isDayOff ? (r.in === '-' ? 'PL OFF' : 'UNPL OFF') : earn,
-                    r.task || '-'
-                ]);
+                var isOff = r.isDayOff;
+                var earn = isOff ? '' : ((r.rounded||0)*40);
+                var earnLabel = isOff ? (r.in==='-'?'PL OFF':'UNPL OFF') : earn;
+                var bg = isOff ? '#f5f5f5' : '#ffffff';
+                var style = 'background:'+bg+';';
+                rows += '<tr style="'+style+'">'
+                    + '<td>'+r.date+'</td>'
+                    + '<td>'+(isOff ? '-' : r.in+' → '+r.out)+'</td>'
+                    + '<td style="text-align:center;">'+(isOff ? '-' : (r.durStr||'-'))+'</td>'
+                    + '<td style="text-align:center;">'+(isOff ? '-' : (r.rounded||0))+'</td>'
+                    + '<td style="text-align:right;font-weight:'+(isOff?'700':'400')+';color:'+(isOff?'#888':'#000')+';">'+earnLabel+'</td>'
+                    + '<td>'+(r.task||'-')+'</td>'
+                    + '</tr>';
             });
 
-            // Total row
-            wsData.push([]);
-            wsData.push(['TOTAL', '', '', totalHrs, totalEarn, '']);
-
-            // Advance section
-            if(advances.length > 0) {
-                wsData.push([]);
-                wsData.push([l.adv]);
-                wsData.push([l.date, l.adv, l.note]);
-                var totalAdv = 0;
-                advances.forEach(function(a) {
-                    totalAdv += a.amount;
-                    wsData.push([a.date, a.amount, a.note || '-']);
-                });
-                wsData.push(['TOTAL', totalAdv, '']);
-                wsData.push([]);
-                wsData.push([l.gross, totalEarn]);
-                wsData.push([l.adv, totalAdv]);
-                wsData.push([l.net, totalEarn - totalAdv]);
-            }
-
-            // Create workbook
-            var wb = XLSX.utils.book_new();
-            var ws = XLSX.utils.aoa_to_sheet(wsData);
-
-            // Column widths
-            ws['!cols'] = [
-                {wch:14}, {wch:18}, {wch:10}, {wch:8}, {wch:10}, {wch:20}
-            ];
-
-            // Style title rows bold
-            var styleTitle = {font:{bold:true, sz:14}};
-            var styleHeader = {font:{bold:true, color:{rgb:'FFFFFF'}}, fill:{fgColor:{rgb:'000000'}}, alignment:{horizontal:'center'}};
-            var styleTotalRow = {font:{bold:true}, fill:{fgColor:{rgb:'F3F4F6'}}};
-
-            // Apply styles to header row (row index 3 = wsData[3])
-            var headerRowIdx = 3;
-            var cols = ['A','B','C','D','E','F'];
-            cols.forEach(function(c) {
-                var cell = ws[c + (headerRowIdx+1)];
-                if(cell) cell.s = styleHeader;
+            var advRows = '';
+            advances.forEach(function(a){
+                advRows += '<tr><td>'+a.date+'</td><td style="text-align:right;">'+a.amount+'</td><td>'+(a.note||'-')+'</td></tr>';
             });
-            // Title bold
-            if(ws['A1']) ws['A1'].s = {font:{bold:true, sz:14}};
-            if(ws['A2']) ws['A2'].s = {font:{bold:true, sz:11, color:{rgb:'555555'}}};
 
-            XLSX.utils.book_append_sheet(wb, ws, monthLabel.slice(0,31));
-            XLSX.writeFile(wb, emp.name + '_' + mStr + '.xlsx');
+            var advSection = advances.length > 0 ? (
+                '<tr><td colspan="6" style="height:16px;"></td></tr>'
+                + '<tr><td colspan="6" style="background:#000;color:#fff;font-weight:900;font-size:11pt;padding:8px 10px;letter-spacing:1px;">'+l.adv.toUpperCase()+'</td></tr>'
+                + '<tr style="background:#f0f0f0;font-weight:700;">'
+                + '<td>'+l.date+'</td><td style="text-align:right;">'+l.adv+'</td><td>'+l.note+'</td><td colspan="3"></td>'
+                + '</tr>'
+                + advRows
+                + '<tr style="background:#e0e0e0;font-weight:900;">'
+                + '<td>TOTAL</td><td style="text-align:right;">'+totalAdv+'</td><td colspan="4"></td>'
+                + '</tr>'
+            ) : '';
+
+            var html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">'
+                + '<head><meta charset="UTF-8">'
+                + '<!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>'
+                + '<x:Name>'+monthLabel+'</x:Name>'
+                + '<x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions>'
+                + '</x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->'
+                + '<style>'
+                + 'body{font-family:Calibri,Arial,sans-serif;font-size:10pt;}'
+                + 'table{border-collapse:collapse;width:100%;}'
+                + 'td,th{padding:6px 10px;border:1px solid #d0d0d0;}'
+                + '.hdr{background:#000;color:#fff;font-weight:900;font-size:10pt;text-transform:uppercase;letter-spacing:0.5px;}'
+                + '.total-row{background:#1a1a1a;color:#fff;font-weight:900;}'
+                + '.summary-row td{font-weight:700;font-size:11pt;}'
+                + '.net-row td{font-weight:900;font-size:13pt;border-top:3px solid #000;}'
+                + '</style></head><body>'
+                + '<table>'
+                // Title
+                + '<tr><td colspan="6" style="border:none;padding:4px 0;font-size:16pt;font-weight:900;letter-spacing:1px;">I LAUNDRY SERVICE</td></tr>'
+                + '<tr><td colspan="6" style="border:none;padding:2px 0;font-size:11pt;color:#555;">'+emp.name+' — '+monthLabel+'</td></tr>'
+                + '<tr><td colspan="6" style="border:none;height:10px;"></td></tr>'
+                // Column headers
+                + '<tr>'
+                + '<th class="hdr">'+l.thDate+'</th>'
+                + '<th class="hdr">'+l.thInOut+'</th>'
+                + '<th class="hdr" style="text-align:center;">'+l.thDur+'</th>'
+                + '<th class="hdr" style="text-align:center;">'+l.thRound+'</th>'
+                + '<th class="hdr" style="text-align:right;">'+l.thEarn+'</th>'
+                + '<th class="hdr">'+l.thNote+'</th>'
+                + '</tr>'
+                + rows
+                // Total row
+                + '<tr class="total-row">'
+                + '<td colspan="3" style="text-align:right;">TOTAL</td>'
+                + '<td style="text-align:center;">'+totalHrs+'</td>'
+                + '<td style="text-align:right;">'+totalEarn+'</td>'
+                + '<td></td>'
+                + '</tr>'
+                + advSection
+                // Summary
+                + '<tr><td colspan="6" style="height:16px;border:none;"></td></tr>'
+                + '<tr style="background:#000;color:#fff;font-weight:900;font-size:11pt;">'
+                + '<td colspan="6" style="padding:8px 10px;letter-spacing:1px;">SALARY SUMMARY</td></tr>'
+                + '<tr class="summary-row"><td colspan="4">'+l.gross+'</td><td colspan="2" style="text-align:right;">'+totalEarn+'</td></tr>'
+                + (totalAdv>0 ? '<tr class="summary-row"><td colspan="4">'+l.adv+'</td><td colspan="2" style="text-align:right;color:#cc0000;">-'+totalAdv+'</td></tr>' : '')
+                + '<tr class="net-row"><td colspan="4">'+l.net+'</td><td colspan="2" style="text-align:right;">'+netAmt+'</td></tr>'
+                + '</table></body></html>';
+
+            var blob = new Blob(['﻿'+html], {type:'application/vnd.ms-excel;charset=utf-8'});
+            var a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = emp.name+'_'+mStr+'.xls';
+            a.click();
+            URL.revokeObjectURL(a.href);
         };
 
         // ADMIN APPROVE
