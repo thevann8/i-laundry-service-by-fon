@@ -1082,8 +1082,10 @@
             const q = document.getElementById('searchInput') ? document.getElementById('searchInput').value.toLowerCase() : '';
             grid.innerHTML = '';
 
-            // Update month label
-            const mStr = window.listDate.toISOString().slice(0, 7);
+            // Use local date parts to avoid UTC timezone shift bug
+            var mm = String(window.listDate.getMonth() + 1).padStart(2, '0');
+            var yyyy = window.listDate.getFullYear();
+            var mStr = yyyy + '-' + mm;
             const monthLabel = window.listDate.toLocaleString(window.state.lang, { month: 'long', year: 'numeric' });
             const lbl = document.getElementById('listMonthLabel');
             if(lbl) lbl.textContent = monthLabel;
@@ -1128,7 +1130,7 @@
                     + '<div style="display:flex;align-items:center;gap:14px;">'
                     + '<div style="width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#000;font-size:22px;background:#80ffaa;flex-shrink:0;">' + emp.name.charAt(0).toUpperCase() + '</div>'
                     + '<div><p style="font-size:22px;font-weight:900;color:#fff;line-height:1.1;">' + emp.name + '</p>'
-                    + '<p style="font-size:11px;font-weight:700;opacity:0.35;text-transform:uppercase;margin-top:2px;">' + emp.records.length + ' total records</p></div>'
+                    + '<p style="font-size:11px;font-weight:700;opacity:0.35;text-transform:uppercase;margin-top:2px;">' + recs.length + ' records this month</p></div>'
                     + '</div>'
                     + '<div style="display:flex;gap:4px;">'
                     + '<button onclick="window.openRenameModal(' + emp.id + ')" style="padding:10px;color:#52525b;" onmouseenter="this.style.color=\'#10b981\'" onmouseleave="this.style.color=\'#52525b\'"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></button>'
