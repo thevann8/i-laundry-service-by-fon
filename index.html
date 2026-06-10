@@ -90,7 +90,9 @@
             #print-stats-bar .ps-val { font-size: 12pt; font-weight: 900; line-height: 1.1; }
             #print-stats-bar .ps-lbl { font-size: 5.5pt; font-weight: 700; text-transform: uppercase; opacity: 0.45; }
             #print-stats-bar .ps-salary { background: #000; color: #fff; }
-            #print-stats-bar .ps-salary .ps-lbl { color: #fff; opacity: 0.7; }
+            #print-stats-bar .ps-salary .ps-lbl { color: #ccc; opacity: 1; }
+            #print-stats-bar .ps-val { color: #000; }
+            #print-stats-bar .ps-salary .ps-val { color: #fff; }
 
             /* Print table */
             .rounded-3xl.card-ui { border-radius: 6px !important; border: 1.5px solid #000 !important; background: #fff !important; overflow: hidden !important; }
@@ -102,6 +104,8 @@
             tbody tr.bg-emerald-500\/10 { background: #f0f0f0 !important; font-style: italic; }
             tbody tr.bg-red-500\/10 { background: #f9f9f9 !important; font-style: italic; }
             tbody td { padding: 4px 6px !important; color: #000 !important; }
+            tbody td * { color: #000 !important; }
+            tbody .text-emerald-500, tbody .text-amber-500, tbody .text-pink-500, tbody .text-red-500 { color: #000 !important; }
             /* Hide action column in print */
             thead th:last-child, tbody td:last-child { display: none !important; }
         }
@@ -154,12 +158,12 @@
                 background: #000 !important;
                 color: #fff !important;
             }
-            #print-salary-panel .psp-row { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; border-bottom: 1px solid #333; }
+            #print-salary-panel .psp-row { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; border-bottom: 1px solid #555; }
             #print-salary-panel .psp-row:last-child { border-bottom: none; }
-            #print-salary-panel .psp-label { font-size: 7pt; font-weight: 700; text-transform: uppercase; color: #aaa; }
+            #print-salary-panel .psp-label { font-size: 7pt; font-weight: 700; text-transform: uppercase; color: #ccc; }
             #print-salary-panel .psp-val { font-size: 9pt; font-weight: 900; color: #fff; }
-            #print-salary-panel .psp-net { font-size: 14pt; font-weight: 900; color: #80ffaa; }
-            #print-salary-panel .psp-title { font-size: 7pt; font-weight: 900; text-transform: uppercase; color: #80ffaa; letter-spacing: 0.1em; margin-bottom: 4px; }
+            #print-salary-panel .psp-net { font-size: 14pt; font-weight: 900; color: #fff; }
+            #print-salary-panel .psp-title { font-size: 7pt; font-weight: 900; text-transform: uppercase; color: #fff; letter-spacing: 0.1em; margin-bottom: 4px; }
         }
         /* Advance history table */
         .adv-table tr:hover { background: rgba(255,255,255,0.03); }
@@ -1622,7 +1626,7 @@
                     + '<td style="padding:10px 14px;border-bottom:1px solid #e5e7eb;font-weight:700;">' + emp.name + '</td>'
                     + '<td style="padding:10px 14px;text-align:center;border-bottom:1px solid #e5e7eb;">' + hrs.toFixed(1) + '</td>'
                     + '<td style="padding:10px 14px;text-align:right;border-bottom:1px solid #e5e7eb;">' + gross.toLocaleString() + '</td>'
-                    + '<td style="padding:10px 14px;text-align:right;border-bottom:1px solid #e5e7eb;color:#e11d48;">' + (adv > 0 ? '-'+adv.toLocaleString() : '-') + '</td>'
+                    + '<td style="padding:10px 14px;text-align:right;border-bottom:1px solid #e5e7eb;">' + (adv > 0 ? '-'+adv.toLocaleString() : '-') + '</td>'
                     + '<td style="padding:10px 14px;text-align:right;border-bottom:1px solid #e5e7eb;font-weight:700;">' + net.toLocaleString() + '</td>'
                     + '</tr>';
                 idx++;
@@ -1631,7 +1635,7 @@
                 + '<td colspan="2" style="padding:12px 14px;text-align:right;">TOTAL</td>'
                 + '<td style="padding:12px 14px;text-align:center;">' + totalHrs.toFixed(1) + '</td>'
                 + '<td style="padding:12px 14px;text-align:right;">' + totalGross.toLocaleString() + '</td>'
-                + '<td style="padding:12px 14px;text-align:right;color:#e11d48;">' + (totalAdv > 0 ? '-'+totalAdv.toLocaleString() : '-') + '</td>'
+                + '<td style="padding:12px 14px;text-align:right;">' + (totalAdv > 0 ? '-'+totalAdv.toLocaleString() : '-') + '</td>'
                 + '<td style="padding:12px 14px;text-align:right;">' + totalNet.toLocaleString() + '</td>'
                 + '</tr>';
 
@@ -1643,7 +1647,7 @@
                 + 'th:nth-child(2){text-align:left;}th:nth-child(4),th:nth-child(5){text-align:right;}'
                 + 'tr:hover{background:#f9fafb;}'
                 + '.footer{margin-top:20px;font-size:11px;color:#999;text-align:right;}'
-                + '@media print{body{padding:16px;}button{display:none;}}'
+                + '@media print{body{padding:16px;}button{display:none;}* {color:#000 !important;} th{color:#fff !important;} }'
                 + '</style></head><body>'
                 + '<h1>I LAUNDRY SERVICE</h1>'
                 + '<p class="sub">' + l.pTitle + ' — ' + monthLabel + '</p>'
