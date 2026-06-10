@@ -415,21 +415,21 @@
 
             <div id="locked-features" class="locked-card">
                 <div id="listView" class="space-y-6 print-hidden">
-                    <!-- Month/Year Selector -->
-                    <div class="flex items-center justify-between p-4 card-ui border border-zinc-800" style="border-radius:1.5rem;">
-                        <button onclick="window.shiftListMonth(-1)" class="w-10 h-10 flex items-center justify-center rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white transition text-lg font-black">‹</button>
+                    <!-- Month Selector -->
+                    <div class="flex items-center justify-between px-5 py-4 card-ui border border-zinc-800" style="border-radius:1.5rem;">
+                        <button onclick="window.shiftListMonth(-1)" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-zinc-900 hover:bg-zinc-700 text-white transition text-3xl font-black">&lt;&lt;</button>
                         <div class="text-center">
-                            <p id="listMonthLabel" class="text-base font-black text-white uppercase tracking-wide"></p>
-                            <p id="listMonthSummary" class="text-[9px] font-black uppercase tracking-widest mt-0.5" style="color:#80ffaa;"></p>
+                            <p id="listMonthLabel" class="text-2xl font-black text-white uppercase tracking-widest"></p>
+                            <p id="listMonthSummary" class="text-sm font-black uppercase tracking-widest mt-1" style="color:#80ffaa;"></p>
                         </div>
-                        <button onclick="window.shiftListMonth(1)" class="w-10 h-10 flex items-center justify-center rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white transition text-lg font-black">›</button>
+                        <button onclick="window.shiftListMonth(1)" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-zinc-900 hover:bg-zinc-700 text-white transition text-3xl font-black">&gt;&gt;</button>
                     </div>
                     <!-- Search + Add -->
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <input type="text" id="searchInput" onkeyup="window.renderList()" placeholder="🔍 Search employee..." class="flex-1 py-4 px-6 rounded-3xl card-ui text-white shadow-sm bg-transparent outline-none border border-zinc-800">
-                        <button id="btnAddWorker" onclick="window.openAddWorkerModal()" class="px-10 py-4 rounded-3xl bg-emerald-500 text-black font-black active:scale-95 transition uppercase text-xs">Add Employee</button>
+                        <input type="text" id="searchInput" onkeyup="window.renderList()" placeholder="Search employee..." class="flex-1 py-4 px-6 rounded-3xl card-ui text-white text-lg shadow-sm bg-transparent outline-none border border-zinc-800">
+                        <button id="btnAddWorker" onclick="window.openAddWorkerModal()" class="px-10 py-4 rounded-3xl bg-emerald-500 text-black font-black active:scale-95 transition uppercase text-sm">Add Employee</button>
                     </div>
-                    <div id="workerGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                    <div id="workerGrid" class="grid grid-cols-1 gap-4"></div>
                 </div>
 
                 <div id="detailView" class="hidden space-y-8">
@@ -1078,8 +1078,8 @@
 
         window.renderList = () => {
             if(!window.listDate) window.listDate = new Date();
-            const grid = document.getElementById('workerGrid'); 
-            const q = document.getElementById('searchInput') ? document.getElementById('searchInput').value.toLowerCase() : ''; 
+            const grid = document.getElementById('workerGrid');
+            const q = document.getElementById('searchInput') ? document.getElementById('searchInput').value.toLowerCase() : '';
             grid.innerHTML = '';
 
             // Update month label
@@ -1088,51 +1088,55 @@
             const lbl = document.getElementById('listMonthLabel');
             if(lbl) lbl.textContent = monthLabel;
 
-            // Calculate totals across all employees for summary line
-            let totalAmount = 0, totalWorkers = 0;
-            employees.forEach(emp => {
-                const recs = emp.records.filter(r => r.date.startsWith(mStr));
-                const hrs = recs.reduce((s, r) => s + (r.rounded || 0), 0);
-                const adv = (emp.advances || []).filter(a => a.date.startsWith(mStr)).reduce((s, a) => s + a.amount, 0);
+            // Summary line
+            var totalAmount = 0, totalWorkers = 0;
+            employees.forEach(function(emp) {
+                var recs = emp.records.filter(function(r){ return r.date.startsWith(mStr); });
+                var hrs = recs.reduce(function(s,r){ return s+(r.rounded||0); }, 0);
+                var adv = (emp.advances||[]).filter(function(a){ return a.date.startsWith(mStr); }).reduce(function(s,a){ return s+a.amount; }, 0);
                 if(recs.length > 0) totalWorkers++;
                 totalAmount += (hrs * 40) - adv;
             });
-            const sumEl = document.getElementById('listMonthSummary');
-            if(sumEl) sumEl.textContent = `${totalWorkers} คน · รวม ${window.state.privacy ? '****' : totalAmount.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})} ฿`;
+            var sumEl = document.getElementById('listMonthSummary');
+            if(sumEl) sumEl.textContent = totalWorkers + ' person \u00b7 Total ' + (window.state.privacy ? '****' : totalAmount.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})) + ' \u0e3f';
 
-            employees.forEach(emp => {
-                if(emp.name.toLowerCase().includes(q)) {
-                    // Calculate this employee's net for selected month
-                    const recs = emp.records.filter(r => r.date.startsWith(mStr));
-                    const hrs = recs.reduce((s, r) => s + (r.rounded || 0), 0);
-                    const adv = (emp.advances || []).filter(a => a.date.startsWith(mStr)).reduce((s, a) => s + a.amount, 0);
-                    const gross = hrs * 40;
-                    const net = gross - adv;
-                    const workedDays = recs.filter(r => !r.isDayOff).length;
-                    const hasData = recs.length > 0;
+            // Show ALL employees always
+            employees.forEach(function(emp) {
+                if(!emp.name.toLowerCase().includes(q)) return;
 
-                    const card = document.createElement('div'); 
-                    card.className = "card-ui p-5 cursor-pointer hover:bg-zinc-900 transition border border-zinc-800";
-                    card.onclick = (e) => { if(!e.target.closest('button')) { window.state.date = new Date(window.listDate); window.selectWorker(emp.id); } };
-                    var statsHTML = hasData
-                        ? '<div class="border-t border-zinc-800 pt-3 grid grid-cols-3 gap-2 text-center">'
-                            + '<div><p class="text-[9px] font-black uppercase opacity-40 mb-0.5">Days</p><p class="text-sm font-black text-white">' + workedDays + '</p></div>'
-                            + '<div><p class="text-[9px] font-black uppercase opacity-40 mb-0.5">Hours</p><p class="text-sm font-black text-white">' + hrs.toFixed(1) + '</p></div>'
-                            + '<div><p class="text-[9px] font-black uppercase opacity-40 mb-0.5">Net \u0e3f</p><p class="text-sm font-black" style="color:#80ffaa;">' + (window.state.privacy ? '****' : net.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})) + '</p></div>'
-                            + '</div>'
-                        : '<div class="border-t border-zinc-800 pt-3 text-center"><p class="text-[9px] opacity-30 font-bold uppercase">No records this month</p></div>';
-                    card.innerHTML = '<div class="flex justify-between items-start mb-3">'
-                        + '<div class="flex items-center gap-3">'
-                        + '<div class="w-10 h-10 rounded-xl flex items-center justify-center font-black text-black text-sm shadow-md" style="background:#80ffaa;">' + emp.name.charAt(0).toUpperCase() + '</div>'
-                        + '<div><h3 class="font-black text-white text-base leading-tight">' + emp.name + '</h3><p class="text-[9px] opacity-40 uppercase font-black">' + emp.records.length + ' Total Rec</p></div>'
+                var recs = emp.records.filter(function(r){ return r.date.startsWith(mStr); });
+                var hrs = recs.reduce(function(s,r){ return s+(r.rounded||0); }, 0);
+                var adv = (emp.advances||[]).filter(function(a){ return a.date.startsWith(mStr); }).reduce(function(s,a){ return s+a.amount; }, 0);
+                var net = (hrs * 40) - adv;
+                var workedDays = recs.filter(function(r){ return !r.isDayOff; }).length;
+                var hasData = recs.length > 0;
+
+                var card = document.createElement('div');
+                card.className = 'card-ui cursor-pointer hover:bg-zinc-900 transition border border-zinc-800';
+                card.style.borderRadius = '1.25rem';
+                card.onclick = function(e) { if(!e.target.closest('button')) { window.state.date = new Date(window.listDate); window.selectWorker(emp.id); } };
+
+                var statsHTML = hasData
+                    ? '<div style="border-top:1px solid #27272a;margin-top:14px;padding-top:14px;display:grid;grid-template-columns:1fr 1fr 1fr;text-align:center;gap:8px;">'
+                        + '<div><p style="font-size:10px;font-weight:900;text-transform:uppercase;opacity:0.4;margin-bottom:4px;">Days</p><p style="font-size:22px;font-weight:900;color:#fff;">' + workedDays + '</p></div>'
+                        + '<div><p style="font-size:10px;font-weight:900;text-transform:uppercase;opacity:0.4;margin-bottom:4px;">Hours</p><p style="font-size:22px;font-weight:900;color:#fff;">' + hrs.toFixed(1) + '</p></div>'
+                        + '<div><p style="font-size:10px;font-weight:900;text-transform:uppercase;opacity:0.4;margin-bottom:4px;">Net \u0e3f</p><p style="font-size:22px;font-weight:900;color:#80ffaa;">' + (window.state.privacy ? '****' : net.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0})) + '</p></div>'
                         + '</div>'
-                        + '<div class="flex gap-1">'
-                        + '<button onclick="window.openRenameModal(' + emp.id + ')" class="p-2 text-zinc-600 hover:text-emerald-500 transition"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></button>'
-                        + '<button onclick="window.confirmDelWorker(' + emp.id + ')" class="p-2 text-zinc-600 hover:text-red-500 transition"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg></button>'
-                        + '</div></div>'
-                        + statsHTML; 
-                    grid.appendChild(card);
-                }
+                    : '<div style="border-top:1px solid #27272a;margin-top:14px;padding-top:10px;text-align:center;"><p style="font-size:11px;opacity:0.3;font-weight:700;text-transform:uppercase;">No records this month</p></div>';
+
+                card.innerHTML = '<div style="padding:20px 20px 0 20px;display:flex;justify-content:space-between;align-items:center;">'
+                    + '<div style="display:flex;align-items:center;gap:14px;">'
+                    + '<div style="width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#000;font-size:22px;background:#80ffaa;flex-shrink:0;">' + emp.name.charAt(0).toUpperCase() + '</div>'
+                    + '<div><p style="font-size:22px;font-weight:900;color:#fff;line-height:1.1;">' + emp.name + '</p>'
+                    + '<p style="font-size:11px;font-weight:700;opacity:0.35;text-transform:uppercase;margin-top:2px;">' + emp.records.length + ' total records</p></div>'
+                    + '</div>'
+                    + '<div style="display:flex;gap:4px;">'
+                    + '<button onclick="window.openRenameModal(' + emp.id + ')" style="padding:10px;color:#52525b;" onmouseenter="this.style.color=\'#10b981\'" onmouseleave="this.style.color=\'#52525b\'"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></button>'
+                    + '<button onclick="window.confirmDelWorker(' + emp.id + ')" style="padding:10px;color:#52525b;" onmouseenter="this.style.color=\'#ef4444\'" onmouseleave="this.style.color=\'#52525b\'"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg></button>'
+                    + '</div></div>'
+                    + '<div style="padding:0 20px 20px 20px;">' + statsHTML + '</div>';
+
+                grid.appendChild(card);
             });
         };
 
